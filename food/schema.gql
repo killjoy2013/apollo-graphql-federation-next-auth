@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type Restaurant {
+  id: Int!
+  name: String!
+  meals: [Meal!]
+  cityId: Float!
+  city: City!
+}
+
+type Meal {
+  id: Int!
+  name: String!
+  restaurants: [Restaurant!]
+}
+
+type City {
+  id: Int!
+  restaurants: [Restaurant!]
+}
+
+type Query {
+  restaurants(name: String): [Restaurant!]!
+  restaurant(id: Int!): Restaurant!
+  meals(name: String): [Meal!]!
+  meal(id: Int!): Meal!
+}
+
+type Mutation {
+  createRestaurant(input: CreateRestaurantInput!): Restaurant!
+  updateRestaurant(input: UpdateRestaurantInput!): Restaurant!
+  removeRestaurant(id: Int!): Int
+  createMeal(input: CreateMealInput!): Meal!
+  updateMeal(input: UpdateMealInput!): Meal!
+  removeMeal(id: Int!): Int
+}
+
+input CreateRestaurantInput {
+  name: String!
+  cityId: Int!
+}
+
+input UpdateRestaurantInput {
+  name: String
+  cityId: Int
+  id: Int!
+}
+
+input CreateMealInput {
+  name: String!
+}
+
+input UpdateMealInput {
+  name: String
+  id: Int!
+}
