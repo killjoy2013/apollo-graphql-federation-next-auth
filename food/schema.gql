@@ -15,9 +15,17 @@ directive @provides(fields: String!) on FIELD_DEFINITION
 type Restaurant {
   id: Int!
   name: String!
+  priceRange: PriceRange
   meals: [Meal!]
   cityId: Float!
   city: City!
+}
+
+enum PriceRange {
+  Cheap
+  Moderate
+  Expensive
+  Luxury
 }
 
 type Meal {
@@ -49,11 +57,13 @@ type Mutation {
 
 input CreateRestaurantInput {
   name: String!
+  priceRange: PriceRange!
   cityId: Int!
 }
 
 input UpdateRestaurantInput {
   name: String
+  priceRange: PriceRange
   cityId: Int
   id: Int!
 }

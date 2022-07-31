@@ -1,5 +1,6 @@
 import { CreateRestaurantInput } from './create-restaurant.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { PriceRange } from '../enums';
 
 @InputType()
 export class UpdateRestaurantInput extends PartialType(CreateRestaurantInput) {
@@ -8,4 +9,7 @@ export class UpdateRestaurantInput extends PartialType(CreateRestaurantInput) {
 
   @Field({ nullable: true })
   name: string;
+
+  @Field((type) => PriceRange, { nullable: true })
+  priceRange: PriceRange;
 }
