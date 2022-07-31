@@ -1,0 +1,74 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type Address {
+  id: Int!
+  detail: String!
+  cityId: Int!
+  personId: Int!
+}
+
+type Person {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  occupation: String!
+  addresses: [Address!]
+  hobbies: [Hobby!]
+}
+
+type Hobby {
+  id: Int!
+  name: String!
+  difficulty: Difficulty
+  persons: [Person!]
+}
+
+enum Difficulty {
+  Easy
+  Moderate
+  Difficult
+}
+
+type Query {
+  hobbies(name: String): [Hobby!]!
+  hobby(id: Int!): Hobby!
+  persons(firstName: String): [Person!]!
+  person(id: Int!): Person!
+}
+
+type Mutation {
+  createRestaurant(input: CreateHobbyInput!): Hobby!
+  removeRestaurant(id: Int!): Int
+  createPerson(input: CreatePersonInput!): Person!
+  removePerson(id: Int!): Int
+}
+
+input CreateHobbyInput {
+  name: String!
+  difficulty: Difficulty!
+  cityId: Int!
+}
+
+input CreatePersonInput {
+  firstName: String!
+  lastName: String!
+  occupation: String!
+  address: CreateAddressInput!
+}
+
+input CreateAddressInput {
+  detail: String!
+  cityId: Int!
+}
