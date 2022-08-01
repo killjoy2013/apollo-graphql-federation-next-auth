@@ -1,7 +1,18 @@
-import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+  ResolveReference,
+} from "@nestjs/graphql";
 import { GetUser } from "../auth/get-user.decorator";
 
 import { CreatePersonInput } from "./dto/create-person.input";
+import { Address } from "./entities/address.entity";
+import { City } from "./entities/city.proxy.entity";
 
 import { Person } from "./entities/person.entity";
 import { PersonService } from "./person.service";
@@ -34,4 +45,14 @@ export class PersonResolver {
   ) {
     return this.personService.remove(id);
   }
+
+  @ResolveReference()
+  resolveReference(reference: { __typename: string; id: number }) {
+    return this.personService.findOne(reference.id);
+  }
+
+  // @ResolveField((of) => City)
+  // city(@Parent() address: Address) {
+  //   return { __typename: "City", id: address.cityId };
+  // }
 }

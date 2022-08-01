@@ -1,18 +1,21 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
 import { type } from "os";
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { City } from "./city.proxy.entity";
 import { Person } from "./person.entity";
 
 @Entity()
 @ObjectType()
-export class Address {
-  @PrimaryGeneratedColumn()
+@Directive('@key(fields: "id")')
+export class Address extends BaseEntity {
+  @PrimaryGeneratedColumn("increment")
   @Field(() => Int)
   id: number;
 
@@ -21,7 +24,7 @@ export class Address {
   detail: string;
 
   @Column({ name: "city_id" })
-  @Field((type) => Int)
+  //@Field((type) => Int)
   cityId: number;
 
   @Column({ type: "int", name: "person_id" })

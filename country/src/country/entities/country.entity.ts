@@ -16,7 +16,7 @@ import { Treaty } from './../../treaty/entities/treaty.entity';
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Country {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 

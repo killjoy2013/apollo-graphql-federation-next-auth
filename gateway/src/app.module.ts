@@ -70,6 +70,10 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
               name: 'food',
               url: process.env.FOOD_SUBGRAPH,
             },
+            {
+              name: 'people',
+              url: process.env.PEOPLE_SUBGRAPH,
+            },
           ],
         }),
       },

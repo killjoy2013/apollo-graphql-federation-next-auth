@@ -5,7 +5,7 @@ import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 @ObjectType()
 export class Meal {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 

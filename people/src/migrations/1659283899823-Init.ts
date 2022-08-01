@@ -38,13 +38,19 @@ export class Init1659283899823 implements MigrationInterface {
     await queryRunner.query(`INSERT INTO public.hobby (id, "name", difficulty) 
                                     VALUES (1, 'Playing Guitar', 'Difficult'::hobby_difficulty_enum),
                                            (2, 'Swimming', 'Moderate'::hobby_difficulty_enum),
-                                           (3, 'Travel', 'Easy'::hobby_difficulty_enum);`);
+                                           (3, 'Travel', 'Easy'::hobby_difficulty_enum);
+
+                                           SELECT setval('hobby_id_seq', 4)
+                                           `);
 
     await queryRunner.query(`INSERT INTO public.person (id, "first_name", "last_name", occupation) 
                                         VALUES (1, 'Abraham', 'Lincoln', 'President'),
                                                (2, 'Anjelina', 'Jolie', 'Actress'),
                                                (3, 'Omar', 'Hayyam', 'Poet'),
-                                               (4, 'Taylor', 'Swift', 'Singer');`);
+                                               (4, 'Taylor', 'Swift', 'Singer');
+                                               
+                                               SELECT setval('person_id_seq', 5)
+                                               `);
 
     await queryRunner.query(`INSERT INTO public.person_hobby (person_id, hobby_id) 
                                                VALUES (1, 1),
@@ -61,7 +67,10 @@ export class Init1659283899823 implements MigrationInterface {
                                                              (3, 2, 3, 'Very detailed address'),
                                                              (4, 3, 3, 'Hayyam street'),
                                                              (5, 4, 4, 'Taylors addresss  111'),
-                                                             (6, 4, 5, 'Taylors addresss  222');`);
+                                                             (6, 4, 5, 'Taylors addresss  222');
+                                                             
+                                                             SELECT setval('address_id_seq', 7)
+                                                             `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

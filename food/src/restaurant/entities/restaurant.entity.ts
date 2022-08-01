@@ -13,7 +13,7 @@ import { PriceRange } from '../enums';
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Restaurant {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 

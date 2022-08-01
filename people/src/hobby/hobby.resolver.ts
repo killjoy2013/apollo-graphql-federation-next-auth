@@ -18,7 +18,7 @@ export class HobbyResolver {
   constructor(private readonly hobbyService: HobbyService) {}
 
   @Mutation(() => Hobby)
-  createRestaurant(@Args("input") input: CreateHobbyInput) {
+  createHobby(@Args("input") input: CreateHobbyInput) {
     return this.hobbyService.create(input);
   }
 
@@ -33,7 +33,7 @@ export class HobbyResolver {
   }
 
   @Mutation(() => Int, { nullable: true })
-  removeRestaurant(
+  removeHobby(
     // @GetUser() user: any,
     @Args("id", { type: () => Int, nullable: false }) id: number
   ) {

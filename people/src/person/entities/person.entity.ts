@@ -1,6 +1,7 @@
 import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
 import { Hobby } from "src/hobby/entities/hobby.entity";
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinTable,
@@ -13,8 +14,8 @@ import { Address } from "./address.entity";
 @Entity()
 @ObjectType()
 @Directive('@key(fields: "id")')
-export class Person {
-  @PrimaryGeneratedColumn()
+export class Person extends BaseEntity {
+  @PrimaryGeneratedColumn("increment")
   @Field(() => Int)
   id: number;
 

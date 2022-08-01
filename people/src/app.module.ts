@@ -12,6 +12,7 @@ import { AuthModule } from "./auth/auth.module";
 import { Hobby } from "./hobby/entities/hobby.entity";
 import { HobbyModule } from "./hobby/hobby.module";
 import { Address } from "./person/entities/address.entity";
+import { City } from "./person/entities/city.proxy.entity";
 import { Person } from "./person/entities/person.entity";
 
 import { PersonModule } from "./person/person.module";
@@ -22,6 +23,9 @@ import { PersonModule } from "./person/person.module";
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: join(process.cwd(), "schema.gql"),
+      buildSchemaOptions: {
+        orphanedTypes: [City],
+      },
 
       context: ({ req }) => {
         const user = req.headers.user ? JSON.parse(req.headers.user) : null;
@@ -32,6 +36,7 @@ import { PersonModule } from "./person/person.module";
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.DATABASE_URL,
+
       entities: [Person, Hobby, Address],
     }),
 
