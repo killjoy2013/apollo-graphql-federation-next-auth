@@ -12,7 +12,11 @@ export class PriceRange1659256623206 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `UPDATE "restaurant" SET "price_range"='Moderate'::restaurant_price_range_enum `,
+      `UPDATE "restaurant" SET "price_range"='Luxury'::restaurant_price_range_enum WHERE name='Noma';
+       UPDATE "restaurant" SET "price_range"='Expensive'::restaurant_price_range_enum WHERE name IN ('La Maison', 'Rouge');
+       UPDATE "restaurant" SET "price_range"='Cheap'::restaurant_price_range_enum WHERE name IN ('Croissant', 'Hunger');
+       UPDATE "restaurant" SET "price_range"='Moderate'::restaurant_price_range_enum WHERE name NOT IN ('Croissant', 'Hunger','La Maison', 'Rouge','Noma');
+      `,
     );
   }
 
