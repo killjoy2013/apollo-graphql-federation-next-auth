@@ -17,7 +17,6 @@ type Restaurant {
   name: String!
   priceRange: PriceRange
   meals: [Meal!]
-  cityId: Float!
   city: City!
 }
 
