@@ -16,7 +16,6 @@ type Restaurant {
   id: Int!
   name: String!
   meals: [Meal!]
-  cityId: Float!
   city: City!
 }
 

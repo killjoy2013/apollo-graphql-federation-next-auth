@@ -12,7 +12,7 @@ import {
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Restaurant {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 
@@ -35,10 +35,7 @@ export class Restaurant {
   })
   meals: Meal[];
 
-  // @Field(() => City)
-  // city: City;
-
   @Column()
-  @Field()
+  //@Field()
   cityId: number;
 }

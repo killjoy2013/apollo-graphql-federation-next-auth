@@ -21,7 +21,7 @@ export class Seed1636893314329 implements MigrationInterface {
     await queryRunner.query(`INSERT INTO public.city (id, "name", country_id) 
                               VALUES (1, 'Lyon', 2),
                                     (2, 'Paris', 2),
-                                    (3, 'Tokya', 1),
+                                    (3, 'Tokyo', 1),
                                     (4, 'Osaka', 1),
                                     (5, 'Kyoto', 1);
 
