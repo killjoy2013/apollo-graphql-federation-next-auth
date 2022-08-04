@@ -1,0 +1,23 @@
+#initialize cli
+npx prisma
+
+#initialize prisma config
+npx prisma init
+
+#create and apply migration
+npx prisma migrate dev --name init
+
+#generate prisma client, load env vars
+npx prisma generate
+
+#seed data
+npx prisma db seed
+
+#create not run
+npx prisma migrate dev --name NoRunMig --create-only
+
+#deploy all migrations
+npx prisma migrate deploy
+
+#reset db run migrations
+npx prisma migrate reset

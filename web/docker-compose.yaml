@@ -1,0 +1,63 @@
+version: '3.3'
+services:
+  # nextjsclient:
+  #   restart: always
+  #   image: artifactory.turkcell.com.tr/local-docker-dist-dev/com/turkcell/erisim-saglama-sistemi/ess-web/nextjsmuiapolloclient:108
+  #   depends_on:
+  #     - postgresql
+  #   ports:
+  #     - '3000:3000'
+  #   environment:
+  #     - TZ=Europe/Istanbul
+  #     - TOOLBAR_COLOR=blue
+  #     - GRAPHQL_URL_CLIENT=http://localhost:4000/graphql
+  #     - GRAPHQL_URL_SSR=http://nestpython:4000/graphql
+  #     - LDAP_HOST_ROLES=ldap://10.218.130.72:389
+  #     - LDAP_DN_ROLES=CN=administrator,CN=Users,DC=ora,DC=idm,DC=test
+  #     - LDAP_PASSWORD_ROLES=123Qwe.
+  #     - LDAP_BASE_DN_ROLES=dc=ora,dc=idm,dc=test
+  #     - LDAP_HOST_VALIDATION=ldap://adldap.turkcell.entp.tgc:389
+  #     - LDAP_DN_VALIDATION=CN=NODERUNNERTEST,OU=Public Mailboxes,DC=turkcell,DC=entp,DC=tgc
+  #     - LDAP_PASSWORD_VALIDATION=HUXyh855
+  #     - LDAP_BASE_DN_VALIDATION=DC=turkcell,DC=entp, DC=tgc
+  #     - TOKEN_MAX_AGE=600
+  #     - TOKEN_SECRET=topSecret71
+  #     - TOKEN_REFRESH_PERIOD=60
+  #     - DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/countrydb?schema=auth
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'pg_isready -U postgres']
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # nestpython:
+  #   restart: always
+  #   image: graphqlnestjs:latest
+  #   ports:
+  #     - '3100:3100'
+  #   environment:
+  #     - TZ=Europe/Istanbul
+  #     - DB_NAME=countrydb
+  #     - DB_HOST=postgresql
+  #     - DB_PORT=5432
+  #     - DB_USERNAME=postgres
+  #     - DB_PASSWORD=postgres
+
+  postgresql:
+    restart: always
+    image: artifactory.turkcell.com.tr/local-docker-3rd-party/com/turkcell/noderunner/postgres:12.9
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=countrydb
+      - PGUSER=postgres
+      - PG_TRUST_LOCALNET=true
+    volumes:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,98 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type User {
+  id: Int!
+  userName: String!
+  firstName: String!
+  lastName: String!
+  refreshToken: String!
+  roles: [Role!]
+}
+
+type Role {
+  id: Int!
+  name: String!
+  description: String!
+  rights: [Right!]
+  users: [User!]
+}
+
+type Right {
+  id: Int!
+  name: String!
+  description: String!
+  roles: [Role!]
+}
+
+type Query {
+  role(id: Float!): Role!
+  roles(name: String): [Role!]!
+  right(id: Float!): Right!
+  rights(name: String): [Right!]!
+  user(id: Float!): User!
+  users(userName: String): [User!]!
+}
+
+type Mutation {
+  createRole(createRoleInput: CreateRoleInput!): Role!
+  updateRole(updateRoleInput: UpdateRoleInput!): Role!
+  removeRole(id: Float!): Int!
+  assignRoleToUser: String!
+  revokeRoleFromUser: String!
+  revokeAllRolesFromUser: String!
+  createRight(createRightInput: CreateRightInput!): Right!
+  updateRight(updateRightInput: UpdateRightInput!): Right!
+  removeRight(id: Float!): Int!
+  assignRightToRole(rightName: String!, roleName: String!): String!
+  revokeRightFromRole(rightName: String!, roleName: String!): String!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Float!): Int!
+}
+
+input CreateRoleInput {
+  name: String!
+  description: String
+}
+
+input UpdateRoleInput {
+  name: String
+  description: String
+  id: Int!
+}
+
+input CreateRightInput {
+  name: String!
+  description: String
+}
+
+input UpdateRightInput {
+  name: String
+  description: String
+  id: Int!
+}
+
+input CreateUserInput {
+  userName: String!
+  firstName: String!
+  lastName: String!
+}
+
+input UpdateUserInput {
+  userName: String
+  firstName: String
+  lastName: String
+  id: Int!
+}

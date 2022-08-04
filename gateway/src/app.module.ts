@@ -63,6 +63,10 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
             {
+              name: 'auth',
+              url: process.env.AUTH_SUBGRAPH,
+            },
+            {
               name: 'country',
               url: process.env.COUNTRY_SUBGRAPH,
             },

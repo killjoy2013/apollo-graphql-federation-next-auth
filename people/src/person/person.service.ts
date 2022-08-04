@@ -44,20 +44,16 @@ export class PersonService {
 
   async findAll(name: string = null): Promise<Person[]> {
     if (name !== null) {
-      let dell = await this.personRepo.find({
+      return await this.personRepo.find({
         where: {
           firstName: Like(`%${name}%`),
         },
         relations: ["addresses", "hobbies"],
       });
-
-      return dell;
     } else {
-      let foundPerson = await this.personRepo.find({
+      return await this.personRepo.find({
         relations: ["addresses", "hobbies"],
       });
-
-      return foundPerson;
     }
   }
 

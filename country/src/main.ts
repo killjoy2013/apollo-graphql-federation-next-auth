@@ -12,6 +12,6 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
   });
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3100);
+  await app.listen(3200);
 }
 bootstrap();
