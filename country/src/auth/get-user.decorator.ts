@@ -15,6 +15,7 @@ export const GetUser = createParamDecorator(
     const rights = user.rights as string[];
 
     if (!rights.includes(fieldName)) {
+      console.log(`You must have ${fieldName} right`);
       throw new UnauthorizedException(`You must have ${fieldName} right`);
     }
 
