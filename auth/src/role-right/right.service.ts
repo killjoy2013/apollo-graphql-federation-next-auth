@@ -42,7 +42,7 @@ export class RightService {
     baseQueryBuilder.innerJoin(
       'role_right',
       'role_right',
-      'role_right.rightId = right.id',
+      'role_right.right_id = right.id',
     );
 
     baseQueryBuilder.where('role_right.role_id = :roleId', {

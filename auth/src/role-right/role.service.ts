@@ -37,13 +37,13 @@ export class RoleService {
     }
   }
 
-  async findByRight(rightId: number) {
+  async findRolesByRight(rightId: number) {
     let baseQueryBuilder = this.roleRepo.createQueryBuilder('role');
 
     baseQueryBuilder.innerJoin(
       'role_right',
       'role_right',
-      'role_right.rightId = right.id',
+      'role_right.role_id = role.id',
     );
 
     baseQueryBuilder.where('role_right.right_id = :rightId', {

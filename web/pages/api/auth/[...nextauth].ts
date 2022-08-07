@@ -1,37 +1,44 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import { serialize } from 'cookie';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import ldap, { Client } from 'ldapjs';
-import jsonwebtoken from 'jsonwebtoken';
-import { decode, JWT, JWTDecodeParams, JWTEncodeParams } from 'next-auth/jwt';
-import { prisma } from 'db/prisma';
-import { signOut, signIn } from 'next-auth/react';
+import NextAuth, { NextAuthOptions } from "next-auth";
+import { serialize } from "cookie";
+import type { NextApiRequest, NextApiResponse } from "next";
+import CredentialsProvider from "next-auth/providers/credentials";
+import ldap, { Client } from "ldapjs";
+import jsonwebtoken from "jsonwebtoken";
+import { decode, JWT, JWTDecodeParams, JWTEncodeParams } from "next-auth/jwt";
+import { prisma } from "db/prisma";
+import { signOut, signIn } from "next-auth/react";
 
-const regexCn = /.*CN=(.+[^,]).*OU=ESS,\s*OU=APPOU.*/gi;
+async function getRights(username: string): Promise<string[]> {
+  let founduser = await prisma.user.findFirst({
+    where: {
+      username,
+    },
+    include: {
+      UserRole: {
+        include: {
+          role: {
+            include: {
+              rights: {
+                select: {
+                  right: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 
-async function updateUserRolesAndGetRights(
-  username: string,
-  roles: string[]
-): Promise<string[]> {
-  await prisma.$executeRaw`select auth.sp_revoke_all_roles_from_user(${username}); `;
+  let rights = [];
 
-  let promises: Promise<any>[] = [];
+  founduser.UserRole.forEach((ur) => {
+    ur.role.rights.forEach((ri) => {
+      rights = [...rights, ri.right.name];
+    });
+  });
 
-  roles.forEach((role) =>
-    promises.push(
-      prisma.$executeRaw`select auth.sp_assign_role_to_user(${role},${username});`
-    )
-  );
-
-  await Promise.all(promises);
-
-  let rights: any[] =
-    await prisma.$queryRaw`select auth.sp_get_user_rights(${username})`;
-
-  let justRights = rights.map((m) => m.sp_get_user_rights as string);
-
-  return justRights;
+  return rights;
 }
 
 async function authAndCreateToken(username: string, password: string) {
@@ -46,195 +53,46 @@ async function authAndCreateToken(username: string, password: string) {
 
   let refreshToken = jsonwebtoken.sign(token, process.env.TOKEN_SECRET, {
     expiresIn: parseInt(process.env.TOKEN_MAX_AGE),
-    algorithm: 'HS512',
-  });
-
-  await prisma.user.upsert({
-    where: { username },
-    update: { refreshToken },
-    create: { username, refreshToken },
+    algorithm: "HS512",
   });
 
   return token;
 }
 
-async function searchAdForRoles(
-  username: string,
-  _client: Client = null
-): Promise<string[]> {
-  let client: Client = null;
-
-  if (_client) {
-    client = _client;
-  } else {
-    client = ldap.createClient({
-      url: process.env.LDAP_HOST_ROLES as string,
-    });
-
-    client.on('error', (err) => {
-      console.log('ldap err', err);
-    });
-  }
-
-  const entries: ldap.SearchEntry[] = [];
-  const roles: string[] = [];
-
-  return new Promise((resolve, reject) => {
-    client.bind(
-      process.env.LDAP_DN_ROLES as string,
-      process.env.LDAP_PASSWORD_ROLES as string,
-      (error) => {
-        if (error) {
-          reject('LDAP bound failed');
-        } else {
-          const opts: ldap.SearchOptions = {
-            filter: `(&(sAMAccountName=${username}))`,
-            scope: 'sub',
-            attributes: ['dn', 'sn', 'cn', 'sAMAccountName', 'memberOf'],
-          };
-
-          client.search(
-            process.env.LDAP_BASE_DN_ROLES as string,
-            opts,
-            (err, res) => {
-              if (err) {
-                reject(`User ${username} LDAP search error`);
-              } else {
-                res.on('searchRequest', (searchRequest) => {
-                  //console.log('searchRequest: ', searchRequest.messageID);
-                });
-                res.on('searchEntry', async (entry) => {
-                  entries.push(entry);
-
-                  entry.attributes
-                    .filter((att) => att.json.type == 'memberOf')
-                    .forEach((eaAtt) => {
-                      eaAtt.json.vals.filter((val) => {
-                        let match = regexCn.exec(val);
-                        match && match[1] && roles.push(match[1]);
-                      });
-                    });
-
-                  resolve(roles);
-
-                  //todo: solve password problem in this ldap server
-                  // client.bind(entry.dn, password, (err, res) => {
-                  //   if (err) {
-                  //     reject(`User ${username} username or password problem`);
-                  //   } else {
-                  //     resolve({
-                  //       username,
-                  //     });
-                  //   }
-                  // });
-                });
-                res.on('searchReference', (referral) => {
-                  //console.log('referral: ' + referral.uris.join());
-                });
-                res.on('error', (err) => {
-                  reject('LDAP SEARCH error');
-                });
-                res.on('end', (result) => {
-                  if (entries.length == 0) {
-                    reject(`User ${username} username or password problem`);
-                  }
-                });
-              }
-            }
-          );
-        }
-      }
-    );
-  });
-}
-
 async function validate(username: string, password: string): Promise<boolean> {
-  const client = ldap.createClient({
-    url: process.env.LDAP_HOST_VALIDATION as string,
-  });
+  if (username && password) {
+    let foundUser = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
 
-  client.on('error', (err) => {
-    console.log('ldap err', err);
-  });
-
-  const entries: ldap.SearchEntry[] = [];
-
-  return new Promise((resolve, reject) => {
-    client.bind(
-      process.env.LDAP_DN_VALIDATION as string,
-      process.env.LDAP_PASSWORD_VALIDATION as string,
-      (error) => {
-        if (error) {
-          reject('LDAP bound failed');
-        } else {
-          const opts: ldap.SearchOptions = {
-            filter: `(&(sAMAccountName=${username}))`,
-            scope: 'sub',
-            attributes: ['dn', 'sn', 'cn', 'sAMAccountName'],
-          };
-
-          client.search(
-            process.env.LDAP_BASE_DN_VALIDATION as string,
-            opts,
-            (err, res) => {
-              if (err) {
-                reject(`User ${username} LDAP search error`);
-              } else {
-                res.on('searchRequest', (searchRequest) => {
-                  //console.log('searchRequest: ', searchRequest.messageID);
-                });
-                res.on('searchEntry', (entry) => {
-                  entries.push(entry);
-
-                  client.bind(entry.dn, password, (err, res) => {
-                    if (err) {
-                      reject(`User ${username} username or password problem`);
-                    } else {
-                      resolve(true);
-                    }
-                  });
-                });
-                res.on('searchReference', (referral) => {
-                  //console.log('referral: ' + referral.uris.join());
-                });
-                res.on('error', (err) => {
-                  reject('LDAP SEARCH error');
-                });
-                res.on('end', (result) => {
-                  if (entries.length == 0) {
-                    reject(`User ${username} username or password problem`);
-                  }
-                });
-              }
-            }
-          );
-        }
-      }
-    );
-  });
+    if (foundUser) {
+      return true;
+    } else {
+      throw new Error("username not found");
+    }
+  } else {
+    return false;
+  }
 }
 
 async function authenticate(username: string, password: string) {
-  const client = ldap.createClient({
-    url: process.env.LDAP_HOST_ROLES as string,
-  });
-
-  client.on('error', (err) => {
-    console.log('ldap err', err);
-  });
-
   let rights: string[];
 
   return new Promise(async (resolve, reject) => {
     try {
       await validate(username, password);
-      let roles = await searchAdForRoles(username, client);
-      rights = await updateUserRolesAndGetRights(username, roles);
+      rights = await getRights(username);
     } catch (error) {
       reject(error);
     }
     resolve(rights);
   });
+}
+
+function dell() {
+  console.log("dd");
 }
 
 async function refreshToken(oldToken: JWT): Promise<any> {
@@ -265,8 +123,7 @@ async function refreshToken(oldToken: JWT): Promise<any> {
 
       const { iat, exp, ...others } = oldToken;
 
-      let roles = await searchAdForRoles(user.username);
-      let rights = await updateUserRolesAndGetRights(user.username, roles);
+      let rights = await getRights(user.username);
 
       const newToken = {
         ...others,
@@ -285,7 +142,7 @@ async function refreshToken(oldToken: JWT): Promise<any> {
         process.env.TOKEN_SECRET,
         {
           expiresIn: parseInt(process.env.TOKEN_MAX_AGE),
-          algorithm: 'HS512',
+          algorithm: "HS512",
         }
       );
 
@@ -324,17 +181,17 @@ export const authOptions: NextAuthOptions = {
     secret: process.env.TOKEN_SECRET,
     encode: async (params: JWTEncodeParams): Promise<string> => {
       const { secret, token } = params;
-      let encodedToken = '';
+      let encodedToken = "";
       if (token) {
         const { exp, iat, ...rest } = token;
 
         encodedToken = jsonwebtoken.sign(rest, secret, {
           expiresIn: parseInt(process.env.TOKEN_REFRESH_PERIOD),
-          algorithm: 'HS512',
+          algorithm: "HS512",
         });
       } else {
-        console.log('TOKEN EMPTY. SO, LOGOUT!...');
-        return '';
+        console.log("TOKEN EMPTY. SO, LOGOUT!...");
+        return "";
       }
       return encodedToken;
     },
@@ -348,7 +205,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     maxAge: parseInt(process.env.TOKEN_MAX_AGE),
     updateAge: 0,
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   callbacks: {
     async session({ session, token }) {
@@ -383,23 +240,23 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: 'LDAP',
+      name: "ORDINARY_JWT",
       credentials: {
-        username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         const { username, password } = credentials;
 
         if (!username || !password) {
-          throw new Error('enter username or password');
+          throw new Error("enter username or password");
         }
         try {
           let token = await authAndCreateToken(username, password);
           return token;
         } catch (error) {
           console.log(error);
-          throw new Error('Authentication error');
+          throw new Error("Authentication error");
         }
       },
     }),

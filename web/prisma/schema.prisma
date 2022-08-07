@@ -10,14 +10,54 @@ datasource db {
   url      = env("AUTH_DATABASE_URL")
 }
 
+model Right {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  roles       RoleRight[]
+
+  @@map(name: "right")
+}
+
+model Role {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  rights      RoleRight[]
+  users       UserRole[]
+
+  @@map(name: "role")
+}
+
+model RoleRight {
+  
+  roleId  Int   @map("role_id")
+  role    Role  @relation(fields: [roleId], references: [id])
+  rightId Int   @map("right_id")
+  right   Right @relation(fields: [rightId], references: [id])
+
+@@id([roleId,rightId])
+  @@map("role_right")
+}
 
 model User {
-  id           Int        @id @default(autoincrement())
-  username     String     @unique
-  firstname    String?
-  surname      String?
-  mobile       String? 
+  id           Int     @id @default(autoincrement())
+  username     String  @unique @map("user_name")
+  firstname    String? @map("first_name")
+  lastname     String? @map("last_name")
   refreshToken String? @map("refresh_token")
 
   @@map("user")
+  UserRole UserRole[]
 }
+
+model UserRole {
+  
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+  roleId Int  @map("role_id")
+  role   Role @relation(fields: [roleId], references: [id])
+@@id([userId,roleId])
+  @@map("user_role")
+}
+  

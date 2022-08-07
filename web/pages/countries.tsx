@@ -1,4 +1,4 @@
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   IconButton,
   Table,
@@ -6,23 +6,27 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@mui/material';
-import MyAlert from 'components/alert';
-import { getServerSession, Session } from 'next-auth';
-import { getSession, useSession } from 'next-auth/react';
-import { getToken } from 'next-auth/jwt';
-import React, { FC, useCallback, useEffect } from 'react';
-import { initializeApollo } from 'src/apollo';
-import { alertMessageVar } from 'src/cache';
-import { Queries } from 'src/gql_definitions/queries';
+} from "@mui/material";
+import MyAlert from "components/alert";
+import { GetServerSidePropsContext } from "next";
+import {
+  unstable_getServerSession as getServerSession,
+  Session,
+} from "next-auth";
+import { getSession, useSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+import React, { FC, useCallback, useEffect } from "react";
+import { initializeApollo } from "src/apollo";
+import { alertMessageVar } from "src/cache";
+import { Queries } from "src/gql_definitions/queries";
 import {
   CountriesQuery,
   useCountriesQuery,
   useRemoveCountryMutation,
-} from 'src/graphql/types';
-import { NormalizedCache } from '@apollo/client';
-import { authOptions } from './api/auth/[...nextauth]';
-import { createTempToken } from 'helpers/AuthHelper';
+} from "src/graphql/types";
+import { NormalizedCache } from "@apollo/client";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { createTempToken } from "helpers/AuthHelper";
 
 interface SessionWithRightsType extends Session {
   rights: string[];
@@ -62,7 +66,7 @@ const Countries: FC<CountriesType> = (props) => {
 
   const displayDelete = useCallback(
     (countryId: number) => {
-      if (rights.includes('removeCountry')) {
+      if (rights.includes("removeCountry")) {
         return (
           <IconButton
             onClick={async () => {
@@ -111,14 +115,14 @@ const Countries: FC<CountriesType> = (props) => {
   );
 };
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { req, res } = ctx;
-  const session = await getServerSession(ctx, authOptions);
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permenant: false,
       },
     };
@@ -136,7 +140,7 @@ export async function getServerSideProps(ctx) {
         cookie,
       },
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
   });
 
   let normCache = apolloClient.cache.extract();
