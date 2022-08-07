@@ -10,7 +10,6 @@ import {
 } from 'graphql/validation/ValidationContext';
 
 function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
-  console.log({ context });
   return false;
 }
 
@@ -34,19 +33,19 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
           }),
         ],
         playground: false,
-        // context: ({ req }) => {
-        //   if (req.user) {
-        //     const user = req.user;
-        //     return { user };
-        //   } else {
-        //     console.error(
-        //       'Authentication error while creating GQL Context',
-        //       new Date().toLocaleTimeString(),
-        //     );
-        //     throw new Error('Authentication error while creating GQL Context');
-        //   }
-        // },
-        // validationRules: [jwtValidationRule],
+        context: ({ req }) => {
+          if (req.user) {
+            const user = req.user;
+            return { user };
+          } else {
+            console.error(
+              'Authentication error while creating GQL Context',
+              new Date().toLocaleTimeString(),
+            );
+            throw new Error('Authentication error while creating GQL Context');
+          }
+        },
+        validationRules: [jwtValidationRule],
       },
       gateway: {
         buildService({ name, url }) {

@@ -21,8 +21,11 @@ export class CityResolver {
     return this.cityService.create(input);
   }
 
-  @Query(() => [City], { name: 'cities' })
-  findAll(@Args('name', { type: () => String, nullable: true }) name: string) {
+  @Query(() => [City])
+  cities(
+    @GetUser() user: any,
+    @Args('name', { type: () => String, nullable: true }) name: string,
+  ) {
     return this.cityService.findAll(name);
   }
 
@@ -38,7 +41,7 @@ export class CityResolver {
 
   @Mutation(() => Int, { nullable: true })
   removeCity(
-    // @GetUser() user: any,
+    @GetUser() user: any,
     @Args('id', { type: () => Int, nullable: false }) id: number,
   ) {
     return this.cityService.remove(id);

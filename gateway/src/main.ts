@@ -26,48 +26,46 @@ async function bootstrap() {
 
   server.use(cookieParser());
 
-  // server.use((req, res, next) => {
-  //   let secureTag = '';
+  server.use((req, res, next) => {
+    let secureTag = '';
 
-  //   if (process.env.NODE_ENV != 'development') {
-  //     secureTag = '__Secure-';
-  //   }
+    if (process.env.NODE_ENV != 'development') {
+      secureTag = '__Secure-';
+    }
 
-  //   const httpsCookie = req.cookies?.[`${secureTag}next-auth.session-token`];
-  //   const httpCookie = req.cookies?.[`next-auth.session-token`];
+    const httpsCookie = req.cookies?.[`${secureTag}next-auth.session-token`];
+    const httpCookie = req.cookies?.[`next-auth.session-token`];
 
-  //   const token_in_cookie = httpsCookie ? httpsCookie : httpCookie;
+    const token_in_cookie = httpsCookie ? httpsCookie : httpCookie;
 
-  //   console.log({ token_in_cookie });
+    if (token_in_cookie) {
+      req.headers['authorization'] = `Bearer ${token_in_cookie}`;
+    }
 
-  //   if (token_in_cookie) {
-  //     req.headers['authorization'] = `Bearer ${token_in_cookie}`;
-  //   }
+    const handleErrorNext = (err) => {
+      if (err) {
+        console.log(
+          `handleErrorNext on ${new Date().toLocaleTimeString()}`,
+          err,
+        );
 
-  //   const handleErrorNext = (err) => {
-  //     if (err) {
-  //       console.log(
-  //         `handleErrorNext on ${new Date().toLocaleTimeString()}`,
-  //         err,
-  //       );
+        if (
+          err.name === 'UnauthorizedError' &&
+          err.inner.name === 'TokenExpiredError'
+        ) {
+          return next();
+        }
+      }
+      next(err);
+    };
+    const middleware = jwt({
+      secret: process.env.TOKEN_SECRET,
+      algorithms: ['HS512'],
+      credentialsRequired: false,
+    });
 
-  //       if (
-  //         err.name === 'UnauthorizedError' &&
-  //         err.inner.name === 'TokenExpiredError'
-  //       ) {
-  //         return next();
-  //       }
-  //     }
-  //     next(err);
-  //   };
-  //   const middleware = jwt({
-  //     secret: process.env.TOKEN_SECRET,
-  //     algorithms: ['HS512'],
-  //     credentialsRequired: false,
-  //   });
-
-  //   middleware(req, res, handleErrorNext);
-  // });
+    middleware(req, res, handleErrorNext);
+  });
 
   server.use(express.json());
 

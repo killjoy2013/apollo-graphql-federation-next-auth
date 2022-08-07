@@ -14,7 +14,7 @@ export class RightService {
   ) {}
 
   async create(createRightInput: CreateRightInput) {
-    return await this.rightRepo.create(createRightInput);
+    return await this.rightRepo.create(createRightInput).save();
   }
 
   async findOne(id: number) {
@@ -70,16 +70,18 @@ export class RightService {
   }
 
   async assignRightToRole(rightName: string, roleName: string) {
-    await this.connection.query(
-      `select auth.sp_assign_right_to_role (${rightName},${roleName});`,
-    );
+    await this.connection.query(`select sp_assign_right_to_role ($1,$2);`, [
+      rightName,
+      roleName,
+    ]);
 
     return 'OK';
   }
   async revokeRightFromRole(rightName: string, roleName: string) {
-    await this.connection.query(
-      `select auth.sp_revoke_right_from_role (${rightName},${roleName});`,
-    );
+    await this.connection.query(`select sp_revoke_right_from_role ($1,$2);`, [
+      rightName,
+      roleName,
+    ]);
 
     return 'OK';
   }

@@ -42,20 +42,7 @@ const Cities: FC<CitiesType> = (props) => {
   ] = useRemoveCityMutation({
     update(cache, { data: { removeCity: removedId } }) {
       cache.evict({ id: `City:${removedId}` });
-      //removes dangling refs
       cache.gc();
-
-      //we already handled dangling ref in cache. So, we may not need to update the query result
-      // const { cities: oldCities } = cache.readQuery<CitiesQuery>({
-      //   query: Queries.CITIES,
-      // });
-
-      // cache.writeQuery<CitiesQuery>({
-      //   query: Queries.CITIES,
-      //   data: {
-      //     cities: oldCities.filter((f) => f.id != removedId),
-      //   },
-      // });
     },
   });
 

@@ -15,7 +15,7 @@ export class RoleService {
   ) {}
 
   async create(createRoleInput: CreateRoleInput) {
-    return await this.roleRepo.create(createRoleInput);
+    return await this.roleRepo.create(createRoleInput).save();
   }
 
   async findOne(id: number) {
@@ -50,9 +50,7 @@ export class RoleService {
       rightId,
     });
 
-    let dell = await baseQueryBuilder.getMany();
-
-    return dell;
+    return await baseQueryBuilder.getMany();
   }
 
   async update(updateRoleInput: UpdateRoleInput) {
@@ -79,16 +77,17 @@ export class RoleService {
   }
 
   async revokeRoleFromUser(roleName: string, username: string) {
-    await this.connection.query(
-      `select auth.sp_revoke_role_from_user(${roleName}, ${username});`,
-    );
+    await this.connection.query(`select sp_revoke_role_from_user($1, $2);`, [
+      roleName,
+      username,
+    ]);
     return 'OK';
   }
 
   async revokeAllRolesFromUser(username: string) {
-    await this.connection.query(
-      `select auth.sp_revoke_all_roles_from_user(${username});`,
-    );
+    await this.connection.query(`select sp_revoke_all_roles_from_user($1);`, [
+      username,
+    ]);
     return 'OK';
   }
 }

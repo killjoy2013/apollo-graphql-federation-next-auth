@@ -86,7 +86,7 @@ const Countries: FC<CountriesType> = (props) => {
         return null;
       }
     },
-    [session]
+    [removeCountry, rights]
   );
 
   return (

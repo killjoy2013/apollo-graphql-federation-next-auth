@@ -25,8 +25,8 @@ export class CountryResolver {
     return this.countryService.create(input);
   }
 
-  @Query(() => [Country], { name: 'countries' })
-  findAll() {
+  @Query(() => [Country])
+  countries(@GetUser() user: any) {
     return this.countryService.findAll();
   }
 
@@ -42,7 +42,7 @@ export class CountryResolver {
 
   @Mutation(() => Int, { nullable: true })
   removeCountry(
-    // @GetUser() user: any,
+    @GetUser() user: any,
     @Args('id', { type: () => Int, nullable: false }) id: number,
   ) {
     return this.countryService.remove(id);
