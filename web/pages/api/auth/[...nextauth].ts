@@ -1,12 +1,9 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import { serialize } from "cookie";
-import type { NextApiRequest, NextApiResponse } from "next";
-import CredentialsProvider from "next-auth/providers/credentials";
-import ldap, { Client } from "ldapjs";
-import jsonwebtoken from "jsonwebtoken";
-import { decode, JWT, JWTDecodeParams, JWTEncodeParams } from "next-auth/jwt";
 import { prisma } from "db/prisma";
-import { signOut, signIn } from "next-auth/react";
+import jsonwebtoken from "jsonwebtoken";
+import NextAuth, { NextAuthOptions } from "next-auth";
+import { JWT, JWTDecodeParams, JWTEncodeParams } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { signOut } from "next-auth/react";
 
 async function getRights(username: string): Promise<string[]> {
   let founduser = await prisma.user.findFirst({
@@ -56,6 +53,15 @@ async function authAndCreateToken(username: string, password: string) {
     algorithm: "HS512",
   });
 
+  await prisma.user.update({
+    where: {
+      username,
+    },
+    data: {
+      refreshToken,
+    },
+  });
+
   return token;
 }
 
@@ -91,12 +97,7 @@ async function authenticate(username: string, password: string) {
   });
 }
 
-function dell() {
-  console.log("dd");
-}
-
 async function refreshToken(oldToken: JWT): Promise<any> {
-  let returnValue: any;
   return new Promise(async (resolve, reject) => {
     let username = oldToken.username as string;
 
@@ -132,11 +133,6 @@ async function refreshToken(oldToken: JWT): Promise<any> {
           Date.now() + parseInt(process.env.TOKEN_REFRESH_PERIOD) * 1000,
       };
 
-      // const jwtClaims = {
-      //   ...newClaims,
-      //   createdAt: new Date().getTime(),
-      // };
-
       const newRefreshToken = jsonwebtoken.sign(
         newToken,
         process.env.TOKEN_SECRET,
@@ -154,18 +150,6 @@ async function refreshToken(oldToken: JWT): Promise<any> {
           refreshToken: newRefreshToken,
         },
       });
-
-      // const newAccessToken = jsonwebtoken.sign(
-      //   jwtClaims,
-      //   process.env.TOKEN_SECRET,
-      //   {
-      //     expiresIn: parseInt(process.env.TOKEN_MAX_AGE),
-      //     algorithm: 'HS512',
-      //   }
-      // );
-
-      //returnValue = { ...jwtClaims };
-      //returnValue = newAccessToken;
 
       resolve(newToken);
     } catch (error) {

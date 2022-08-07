@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertTitle,
   Button,
   FormControl,
   Grid,
@@ -9,19 +7,16 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { width } from "@mui/system";
 import MyAlert from "components/alert";
 import { GetServerSidePropsContext } from "next";
-import { getSession } from "next-auth/react";
-import { getToken } from "next-auth/jwt";
-import React, { FC, useEffect, useState } from "react";
+import { unstable_getServerSession as getServerSession } from "next-auth";
+import { FC, useEffect, useState } from "react";
 import { alertMessageVar } from "src/cache";
 import {
   Continent,
   CreateCountryInput,
   useCreateCountryMutation,
 } from "src/graphql/types";
-import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 type AddCountryType = {
@@ -37,6 +32,8 @@ const AddCountry: FC<AddCountryType> = (props) => {
   });
 
   const [createCountry, { data, loading, error }] = useCreateCountryMutation();
+
+  console.log({ error });
 
   useEffect(() => {
     data && alertMessageVar({ severity: "success", message: "success" });

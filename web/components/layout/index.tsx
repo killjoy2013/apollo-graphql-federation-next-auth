@@ -1,5 +1,5 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import { useSession, signOut } from 'next-auth/react';
+import MenuIcon from "@mui/icons-material/Menu";
+import { useSession, signOut } from "next-auth/react";
 import {
   AppBar,
   Button,
@@ -12,13 +12,13 @@ import {
   ListItem,
   Toolbar,
   Typography,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useRouter } from 'next/dist/client/router';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { Session } from 'next-auth';
-import getConfig from 'next/config';
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useRouter } from "next/dist/client/router";
+import Link from "next/link";
+import React, { useState } from "react";
+import { Session } from "next-auth";
+import getConfig from "next/config";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -27,26 +27,26 @@ const drawerWidth = 240;
 const theme = createTheme({});
 
 const StyledAppBar = styled(AppBar)(() => ({
-  position: 'fixed',
-  width: '100%',
+  position: "fixed",
+  width: "100%",
   zIndex: 1400,
   backgroundColor: publicRuntimeConfig.toolbarColor,
 }));
 
-const StyledApp = styled('div')(() => ({
+const StyledApp = styled("div")(() => ({
   zIndex: 1,
-  overflow: 'hidden',
-  height: '100vh',
+  overflow: "hidden",
+  height: "100vh",
 }));
 
 const StyledDrawer = styled(Drawer)(() => ({
-  backgroundColor: 'yellow',
-  top: '264px',
-  position: 'fixed',
+  backgroundColor: "yellow",
+  top: "264px",
+  position: "fixed",
   width: drawerWidth,
   borderRadius: 0,
-  borderTop: 'none',
-  borderBottom: 'none',
+  borderTop: "none",
+  borderBottom: "none",
   //top: theme.spacing(8), // push content down to fix scrollbar position
   height: `calc(100vh - 64px)`, // subtract appbar height
 }));
@@ -60,18 +60,18 @@ type StyledContentWrapperType = {
   open: boolean;
 };
 
-const StyledContentWrapper = styled('div')<StyledContentWrapperType>(
+const StyledContentWrapper = styled("div")<StyledContentWrapperType>(
   (props) => ({
     padding: 0,
     margin: 0,
-    overflow: 'auto',
-    position: 'fixed',
+    overflow: "auto",
+    position: "fixed",
     top: theme.spacing(8),
-    height: 'calc(100vh)', // Subtract width of header
-    width: '100%',
+    height: "calc(100vh)", // Subtract width of header
+    width: "100%",
     //backgroundColor: 'pink',
-    marginLeft: props.open ? drawerWidth : '0px',
-    transition: theme.transitions.create('margin', {
+    marginLeft: props.open ? drawerWidth : "0px",
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -86,7 +86,7 @@ const DrawerPart: React.FC<DrawerPartType> = (props: DrawerPartType) => {
   const { open } = props;
   const router = useRouter();
   const { data: session, status } = useSession();
-  const loading = status === 'loading';
+  const loading = status === "loading";
 
   const logoutHandler = () => {
     signOut();
@@ -100,41 +100,29 @@ const DrawerPart: React.FC<DrawerPartType> = (props: DrawerPartType) => {
       open={open}
       elevation={0}
       PaperProps={{
-        variant: 'outlined',
-        sx: { top: '64px', height: 'calc(100vh - 64px)' },
+        variant: "outlined",
+        sx: { top: "64px", height: "calc(100vh - 64px)" },
       }}
     >
       <Grid
         container
         direction="column"
         justifyContent="space-between"
-        sx={{ height: '100vh', width: '240px', bgcolor: 'yellow' }}
+        sx={{ height: "100vh", width: "240px", bgcolor: "yellow" }}
       >
         <Grid item>
           <List>
-            <ListItem onClick={() => router.push('/countries')}>
+            <ListItem onClick={() => router.push("/countries")}>
               <Typography variant="caption">Countries</Typography>
             </ListItem>
-            <ListItem onClick={() => router.push('/add-country')}>
+            <ListItem onClick={() => router.push("/add-country")}>
               <Typography variant="caption">Add Country</Typography>
             </ListItem>
-            <ListItem onClick={() => router.push('/cities')}>
+            <ListItem onClick={() => router.push("/cities")}>
               <Typography variant="caption">Cities</Typography>
             </ListItem>
-            <ListItem onClick={() => router.push('/add-city')}>
+            <ListItem onClick={() => router.push("/add-city")}>
               <Typography variant="caption">Add City</Typography>
-            </ListItem>
-            <ListItem onClick={() => router.push('/my-client-page')}>
-              <Typography variant="caption">Client Page</Typography>
-            </ListItem>
-            <ListItem onClick={() => router.push('/other-client-page')}>
-              <Typography variant="caption">Other Client Page</Typography>
-            </ListItem>
-            <ListItem onClick={() => router.push('/my-static-page')}>
-              <Typography variant="caption">Static Page</Typography>
-            </ListItem>
-            <ListItem onClick={() => router.push('/other-static-page')}>
-              <Typography variant="caption">Other Static Page</Typography>
             </ListItem>
           </List>
         </Grid>
@@ -145,9 +133,9 @@ const DrawerPart: React.FC<DrawerPartType> = (props: DrawerPartType) => {
             <Divider />
             <ListItem
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignContent: 'center',
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
               }}
             >
               {session && <Button onClick={logoutHandler}>Logout</Button>}
@@ -167,7 +155,7 @@ interface CustomSessionType extends Session {
   username: string;
 }
 
-const HeaderLink = styled('a')`
+const HeaderLink = styled("a")`
   text-decoration: none;
   :hover {
     text-decoration: none;
@@ -179,7 +167,7 @@ const PersistentDrawer: React.FC<PersistentDrawerType> = (
 ) => {
   const [open, setOpen] = useState(true);
   const { data: session, status } = useSession();
-  const loading = status === 'loading';
+  const loading = status === "loading";
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -193,7 +181,7 @@ const PersistentDrawer: React.FC<PersistentDrawerType> = (
             container
             direction="row"
             alignItems="center"
-            sx={{ pr: '32px' }}
+            sx={{ pr: "32px" }}
           >
             <Grid container item alignItems="center" sx={{ flex: 1 }}>
               <Grid item>
