@@ -1,0 +1,18 @@
+federation_version: 1
+subgraphs:
+  auth:
+    routing_url: http://localhost:3100/graphql
+    schema:
+      subgraph_url: http://localhost:3100/graphql
+  country:
+    routing_url: http://localhost:3200/graphql
+    schema:
+      subgraph_url: http://localhost:3200/graphql
+  food:
+    routing_url: http://localhost:3300/graphql
+    schema:
+      subgraph_url: http://localhost:3300/graphql
+  people:
+    routing_url: http://localhost:3400/graphql
+    schema:
+      subgraph_url: http://localhost:3400/graphql

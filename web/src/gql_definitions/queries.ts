@@ -1,10 +1,18 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 const CITIES = gql`
   query cities($name: String) {
     cities(name: $name) {
       id
       name
+      persons {
+        firstName
+        occupation
+      }
+      restaurants {
+        name
+        priceRange
+      }
     }
   }
 `;

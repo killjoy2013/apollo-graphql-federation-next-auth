@@ -1,4 +1,5 @@
-schema: http://localhost:4000/graphql
+schema: ../gateway/prod-schema.graphql
+
 documents:
   - ./src/gql_definitions/queries.ts
   - ./src/gql_definitions/mutations.ts
