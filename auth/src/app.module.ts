@@ -19,7 +19,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), 'schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'auth.schema.graphql'),
 
       context: ({ req }) => {
         const user = req.headers.user ? JSON.parse(req.headers.user) : null;

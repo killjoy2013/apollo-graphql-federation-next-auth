@@ -1,9 +1,9 @@
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import {
   SDLValidationContext,
   ValidationContext,
@@ -21,17 +21,10 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
       server: {
         // ... Apollo server options
         cors: {
-          origin: process.env.ALLOWED_URL,
+          origin: '*',
           credentials: true,
         },
-        plugins: [
-          ApolloServerPluginLandingPageGraphQLPlayground({
-            settings: {
-              'editor.theme': 'dark',
-              'request.credentials': 'include',
-            },
-          }),
-        ],
+        plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
         playground: false,
         context: ({ req }) => {
           if (req.user) {

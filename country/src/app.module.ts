@@ -22,7 +22,7 @@ import { TreatyModule } from './treaty/treaty.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), 'schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'country.schema.graphql'),
       context: ({ req }) => {
         const user = req.headers.user ? JSON.parse(req.headers.user) : null;
         return { user };

@@ -1,18 +1,4 @@
-# ------------------------------------------------------
-# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
-# ------------------------------------------------------
-
-directive @key(fields: String!) on OBJECT | INTERFACE
-
-directive @extends on OBJECT | INTERFACE
-
-directive @external on OBJECT | FIELD_DEFINITION
-
-directive @requires(fields: String!) on FIELD_DEFINITION
-
-directive @provides(fields: String!) on FIELD_DEFINITION
-
-type Restaurant {
+type Restaurant @key(fields: "id") {
   id: Int!
   name: String!
   priceRange: PriceRange
@@ -34,8 +20,8 @@ type Meal {
   restaurants: [Restaurant!]
 }
 
-type City {
-  id: Int!
+type City @extends @key(fields: "id") {
+  id: Int! @external
   restaurants: [Restaurant!]
 }
 

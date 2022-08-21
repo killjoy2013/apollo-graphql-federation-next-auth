@@ -1,0 +1,6 @@
+rover subgraph introspect http://localhost:3100/graphql > auth.schema.graphql
+
+
+rover subgraph publish My-Graph-V1@current \
+  --name auth --schema ./auth.schema.graphql \
+  --routing-url http://auth.prod.svc.cluster.local:3100/graphql

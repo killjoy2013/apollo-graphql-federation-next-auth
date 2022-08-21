@@ -3,16 +3,16 @@ subgraphs:
   auth:
     routing_url: http://localhost:3100/graphql
     schema:
-      subgraph_url: http://localhost:3100/graphql
+      file: ../auth/auth.schema.graphql
   country:
     routing_url: http://localhost:3200/graphql
     schema:
-      subgraph_url: http://localhost:3200/graphql
+      file: ../country/country.schema.graphql
   food:
     routing_url: http://localhost:3300/graphql
     schema:
-      subgraph_url: http://localhost:3300/graphql
+      file: ../food/food.schema.graphql
   people:
     routing_url: http://localhost:3400/graphql
     schema:
-      subgraph_url: http://localhost:3400/graphql
+      file: ../people/people.schema.graphql
