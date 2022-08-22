@@ -22,7 +22,12 @@ import { TreatyModule } from './treaty/treaty.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), 'country.schema.graphql'),
+
+      autoSchemaFile: {
+        federation: 2,
+        path: join(process.cwd(), 'country.schema.graphql'),
+      },
+
       context: ({ req }) => {
         const user = req.headers.user ? JSON.parse(req.headers.user) : null;
         return { user };
@@ -32,11 +37,6 @@ import { TreatyModule } from './treaty/treaty.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      // host: process.env.DB_HOST,
-      // port: parseInt(process.env.DB_PORT),
-      // database: process.env.DB_NAME,
-      // username: process.env.DB_USERNAME,
-      // password: process.env.DB_PASSWORD,
       entities: [Country, City, Treaty],
       //synchronize: true,
       //logging: true,

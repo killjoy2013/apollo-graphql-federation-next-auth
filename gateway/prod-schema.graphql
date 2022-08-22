@@ -1,337 +1,397 @@
 
 schema
-  @core(feature: "https://specs.apollo.dev/core/v0.2"),
-  @core(feature: "https://specs.apollo.dev/join/v0.1", for: EXECUTION)
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.2", for: EXECUTION)
 {
   query: Query
   mutation: Mutation
 }
 
-directive @core(as: String, feature: String!, for: core__Purpose) repeatable on SCHEMA
-
-directive @join__field(graph: join__Graph, provides: join__FieldSet, requires: join__FieldSet) on FIELD_DEFINITION
+directive @join__field(graph: join__Graph!, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
 
 directive @join__graph(name: String!, url: String!) on ENUM_VALUE
 
-directive @join__owner(graph: join__Graph!) on INTERFACE | OBJECT
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
 
-directive @join__type(graph: join__Graph!, key: join__FieldSet) repeatable on INTERFACE | OBJECT
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
 
 type Address
-  @join__owner(graph: PEOPLE)
   @join__type(graph: PEOPLE, key: "id")
 {
-  city: City! @join__field(graph: PEOPLE)
-  detail: String! @join__field(graph: PEOPLE)
-  id: Int! @join__field(graph: PEOPLE)
-  personId: Int! @join__field(graph: PEOPLE)
+  id: Int!
+  detail: String!
+  personId: Int!
+  city: City!
 }
 
 type City
-  @join__owner(graph: COUNTRY)
   @join__type(graph: COUNTRY, key: "id")
   @join__type(graph: FOOD, key: "id")
   @join__type(graph: PEOPLE, key: "id")
 {
-  id: Int! @join__field(graph: COUNTRY)
+  id: Int!
   name: String! @join__field(graph: COUNTRY)
-  persons: [Person!] @join__field(graph: PEOPLE)
+  touristic: Boolean @join__field(graph: COUNTRY)
   population: Int @join__field(graph: COUNTRY)
   restaurants: [Restaurant!] @join__field(graph: FOOD)
-  touristic: Boolean @join__field(graph: COUNTRY)
+  persons: [Person!] @join__field(graph: PEOPLE)
 }
 
-enum Continent {
-  Africa
-  America
+enum Continent
+  @join__type(graph: COUNTRY)
+{
   Asia
   Europe
+  America
+  Africa
 }
 
 type Country
-  @join__owner(graph: COUNTRY)
   @join__type(graph: COUNTRY, key: "id")
 {
-  capital: City! @join__field(graph: COUNTRY)
-  cities: [City!] @join__field(graph: COUNTRY)
-  continent: Continent @join__field(graph: COUNTRY)
-  id: Int! @join__field(graph: COUNTRY)
-  name: String! @join__field(graph: COUNTRY)
-  population: Int @join__field(graph: COUNTRY)
-  treaties: [Treaty!] @join__field(graph: COUNTRY)
-}
-
-input CreateAddressInput {
-  cityId: Int!
-  detail: String!
-}
-
-input CreateCityInput {
-  countryId: Int!
+  id: Int!
   name: String!
   population: Int
-}
-
-input CreateCountryInput {
+  cities: [City!]
+  treaties: [Treaty!]
+  capital: City!
   continent: Continent
+}
+
+input CreateAddressInput
+  @join__type(graph: PEOPLE)
+{
+  detail: String!
+  cityId: Int!
+}
+
+input CreateCityInput
+  @join__type(graph: COUNTRY)
+{
   name: String!
   population: Int
+  countryId: Int!
 }
 
-input CreateHobbyInput {
-  cityId: Int!
+input CreateCountryInput
+  @join__type(graph: COUNTRY)
+{
+  name: String!
+  population: Int
+  continent: Continent
+}
+
+input CreateHobbyInput
+  @join__type(graph: PEOPLE)
+{
+  name: String!
   difficulty: Difficulty!
+  cityId: Int!
+}
+
+input CreateMealInput
+  @join__type(graph: FOOD)
+{
   name: String!
 }
 
-input CreateMealInput {
-  name: String!
-}
-
-input CreatePersonInput {
-  address: CreateAddressInput!
+input CreatePersonInput
+  @join__type(graph: PEOPLE)
+{
   firstName: String!
   lastName: String!
   occupation: String!
+  address: CreateAddressInput!
 }
 
-input CreateRestaurantInput {
-  cityId: Int!
+input CreateRestaurantInput
+  @join__type(graph: FOOD)
+{
   name: String!
   priceRange: PriceRange!
+  cityId: Int!
 }
 
-input CreateRightInput {
+input CreateRightInput
+  @join__type(graph: AUTH)
+{
+  name: String!
   description: String
-  name: String!
 }
 
-input CreateRoleInput {
+input CreateRoleInput
+  @join__type(graph: AUTH)
+{
+  name: String!
   description: String
+}
+
+input CreateTreatyInput
+  @join__type(graph: COUNTRY)
+{
   name: String!
 }
 
-input CreateTreatyInput {
-  name: String!
-}
-
-input CreateUserInput {
+input CreateUserInput
+  @join__type(graph: AUTH)
+{
+  userName: String!
   firstName: String!
   lastName: String!
-  userName: String!
 }
 
-enum Difficulty {
-  Difficult
+enum Difficulty
+  @join__type(graph: PEOPLE)
+{
   Easy
   Moderate
+  Difficult
 }
 
 type Hobby
-  @join__owner(graph: PEOPLE)
   @join__type(graph: PEOPLE, key: "id")
 {
-  difficulty: Difficulty @join__field(graph: PEOPLE)
-  id: Int! @join__field(graph: PEOPLE)
-  name: String! @join__field(graph: PEOPLE)
-  persons: [Person!] @join__field(graph: PEOPLE)
-}
-
-type Meal {
   id: Int!
   name: String!
-  restaurants: [Restaurant!]
-}
-
-type Mutation {
-  addCountryToTreaty(countryId: Int!, treatyId: Int!): Country! @join__field(graph: COUNTRY)
-  assignRightToRole(rightName: String!, roleName: String!): String! @join__field(graph: AUTH)
-  assignRoleToUser: String! @join__field(graph: AUTH)
-  createCity(input: CreateCityInput!): City! @join__field(graph: COUNTRY)
-  createCountry(input: CreateCountryInput!): Country! @join__field(graph: COUNTRY)
-  createHobby(input: CreateHobbyInput!): Hobby! @join__field(graph: PEOPLE)
-  createMeal(input: CreateMealInput!): Meal! @join__field(graph: FOOD)
-  createPerson(input: CreatePersonInput!): Person! @join__field(graph: PEOPLE)
-  createRestaurant(input: CreateRestaurantInput!): Restaurant! @join__field(graph: FOOD)
-  createRight(createRightInput: CreateRightInput!): Right! @join__field(graph: AUTH)
-  createRole(createRoleInput: CreateRoleInput!): Role! @join__field(graph: AUTH)
-  createTreaty(input: CreateTreatyInput!): Treaty! @join__field(graph: COUNTRY)
-  createUser(createUserInput: CreateUserInput!): User! @join__field(graph: AUTH)
-  removeCity(id: Int!): Int @join__field(graph: COUNTRY)
-  removeCountry(id: Int!): Int @join__field(graph: COUNTRY)
-  removeCountryFromTreaty(countryId: Int!, treatyId: Int!): Country! @join__field(graph: COUNTRY)
-  removeHobby(id: Int!): Int @join__field(graph: PEOPLE)
-  removeMeal(id: Int!): Int @join__field(graph: FOOD)
-  removePerson(id: Int!): Int @join__field(graph: PEOPLE)
-  removeRestaurant(id: Int!): Int @join__field(graph: FOOD)
-  removeRight(id: Float!): Int! @join__field(graph: AUTH)
-  removeRole(id: Float!): Int! @join__field(graph: AUTH)
-  removeTreaty(id: Int!): Treaty! @join__field(graph: COUNTRY)
-  removeUser(id: Float!): Int! @join__field(graph: AUTH)
-  revokeAllRolesFromUser: String! @join__field(graph: AUTH)
-  revokeRightFromRole(rightName: String!, roleName: String!): String! @join__field(graph: AUTH)
-  revokeRoleFromUser: String! @join__field(graph: AUTH)
-  updateCity(input: UpdateCityInput!): City! @join__field(graph: COUNTRY)
-  updateCountry(input: UpdateCountryInput!): Country! @join__field(graph: COUNTRY)
-  updateMeal(input: UpdateMealInput!): Meal! @join__field(graph: FOOD)
-  updateRestaurant(input: UpdateRestaurantInput!): Restaurant! @join__field(graph: FOOD)
-  updateRight(updateRightInput: UpdateRightInput!): Right! @join__field(graph: AUTH)
-  updateRole(updateRoleInput: UpdateRoleInput!): Role! @join__field(graph: AUTH)
-  updateTreaty(input: UpdateTreatyInput!): Treaty! @join__field(graph: COUNTRY)
-  updateUser(updateUserInput: UpdateUserInput!): User! @join__field(graph: AUTH)
-}
-
-type Person
-  @join__owner(graph: PEOPLE)
-  @join__type(graph: PEOPLE, key: "id")
-{
-  addresses: [Address!] @join__field(graph: PEOPLE)
-  firstName: String! @join__field(graph: PEOPLE)
-  hobbies: [Hobby!] @join__field(graph: PEOPLE)
-  id: Int! @join__field(graph: PEOPLE)
-  lastName: String! @join__field(graph: PEOPLE)
-  occupation: String! @join__field(graph: PEOPLE)
-}
-
-enum PriceRange {
-  Cheap
-  Expensive
-  Luxury
-  Moderate
-}
-
-type Query {
-  cities(name: String): [City!]! @join__field(graph: COUNTRY)
-  city(id: Int!): City! @join__field(graph: COUNTRY)
-  countries: [Country!]! @join__field(graph: COUNTRY)
-  findOne(id: Int!): Country! @join__field(graph: COUNTRY)
-  hobbies(name: String): [Hobby!]! @join__field(graph: PEOPLE)
-  hobby(id: Int!): Hobby! @join__field(graph: PEOPLE)
-  meal(id: Int!): Meal! @join__field(graph: FOOD)
-  meals(name: String): [Meal!]! @join__field(graph: FOOD)
-  person(id: Int!): Person! @join__field(graph: PEOPLE)
-  persons(firstName: String): [Person!]! @join__field(graph: PEOPLE)
-  restaurant(id: Int!): Restaurant! @join__field(graph: FOOD)
-  restaurants(name: String): [Restaurant!]! @join__field(graph: FOOD)
-  right(id: Float!): Right! @join__field(graph: AUTH)
-  rights(name: String): [Right!]! @join__field(graph: AUTH)
-  role(id: Float!): Role! @join__field(graph: AUTH)
-  roles(name: String): [Role!]! @join__field(graph: AUTH)
-  treaties: [Treaty!]! @join__field(graph: COUNTRY)
-  treaty(id: Int!): Treaty! @join__field(graph: COUNTRY)
-  user(id: Float!): User! @join__field(graph: AUTH)
-  users(userName: String): [User!]! @join__field(graph: AUTH)
-}
-
-type Restaurant
-  @join__owner(graph: FOOD)
-  @join__type(graph: FOOD, key: "id")
-{
-  city: City! @join__field(graph: FOOD)
-  cityId: Float! @join__field(graph: FOOD)
-  id: Int! @join__field(graph: FOOD)
-  meals: [Meal!] @join__field(graph: FOOD)
-  name: String! @join__field(graph: FOOD)
-  priceRange: PriceRange @join__field(graph: FOOD)
-}
-
-type Right {
-  description: String!
-  id: Int!
-  name: String!
-  roles: [Role!]
-}
-
-type Role {
-  description: String!
-  id: Int!
-  name: String!
-  rights: [Right!]
-  users: [User!]
-}
-
-type Treaty {
-  countries: [Country!]
-  id: Int!
-  name: String!
-}
-
-input UpdateCityInput {
-  countryId: Int
-  id: Int!
-  name: String
-  population: Int
-}
-
-input UpdateCountryInput {
-  continent: Continent
-  id: Int!
-  name: String
-  population: Int
-}
-
-input UpdateMealInput {
-  id: Int!
-  name: String
-}
-
-input UpdateRestaurantInput {
-  cityId: Int
-  id: Int!
-  name: String
-  priceRange: PriceRange
-}
-
-input UpdateRightInput {
-  description: String
-  id: Int!
-  name: String
-}
-
-input UpdateRoleInput {
-  description: String
-  id: Int!
-  name: String
-}
-
-input UpdateTreatyInput {
-  id: Int!
-  name: String
-}
-
-input UpdateUserInput {
-  firstName: String
-  id: Int!
-  lastName: String
-  userName: String
-}
-
-type User {
-  firstName: String!
-  id: Int!
-  lastName: String!
-  refreshToken: String!
-  roles: [Role!]
-  userName: String!
-}
-
-enum core__Purpose {
-  """
-  `EXECUTION` features provide metadata necessary to for operation execution.
-  """
-  EXECUTION
-
-  """
-  `SECURITY` features provide metadata necessary to securely resolve fields.
-  """
-  SECURITY
+  difficulty: Difficulty
+  persons: [Person!]
 }
 
 scalar join__FieldSet
 
 enum join__Graph {
-  AUTH @join__graph(name: "auth" url: "http://localhost:3100/graphql")
-  COUNTRY @join__graph(name: "country" url: "http://localhost:3200/graphql")
-  FOOD @join__graph(name: "food" url: "http://localhost:3300/graphql")
-  PEOPLE @join__graph(name: "people" url: "http://localhost:3400/graphql")
+  AUTH @join__graph(name: "auth", url: "http://localhost:3100/graphql")
+  COUNTRY @join__graph(name: "country", url: "http://localhost:3200/graphql")
+  FOOD @join__graph(name: "food", url: "http://localhost:3300/graphql")
+  PEOPLE @join__graph(name: "people", url: "http://localhost:3400/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Meal
+  @join__type(graph: FOOD)
+{
+  id: Int!
+  name: String!
+  restaurants: [Restaurant!]
+}
+
+type Mutation
+  @join__type(graph: AUTH)
+  @join__type(graph: COUNTRY)
+  @join__type(graph: FOOD)
+  @join__type(graph: PEOPLE)
+{
+  createRole(createRoleInput: CreateRoleInput!): Role! @join__field(graph: AUTH)
+  updateRole(updateRoleInput: UpdateRoleInput!): Role! @join__field(graph: AUTH)
+  removeRole(id: Float!): Int! @join__field(graph: AUTH)
+  assignRoleToUser: String! @join__field(graph: AUTH)
+  revokeRoleFromUser: String! @join__field(graph: AUTH)
+  revokeAllRolesFromUser: String! @join__field(graph: AUTH)
+  createRight(createRightInput: CreateRightInput!): Right! @join__field(graph: AUTH)
+  updateRight(updateRightInput: UpdateRightInput!): Right! @join__field(graph: AUTH)
+  removeRight(id: Float!): Int! @join__field(graph: AUTH)
+  assignRightToRole(rightName: String!, roleName: String!): String! @join__field(graph: AUTH)
+  revokeRightFromRole(rightName: String!, roleName: String!): String! @join__field(graph: AUTH)
+  createUser(createUserInput: CreateUserInput!): User! @join__field(graph: AUTH)
+  updateUser(updateUserInput: UpdateUserInput!): User! @join__field(graph: AUTH)
+  removeUser(id: Float!): Int! @join__field(graph: AUTH)
+  createCountry(input: CreateCountryInput!): Country! @join__field(graph: COUNTRY)
+  updateCountry(input: UpdateCountryInput!): Country! @join__field(graph: COUNTRY)
+  removeCountry(id: Int!): Int @join__field(graph: COUNTRY)
+  addCountryToTreaty(countryId: Int!, treatyId: Int!): Country! @join__field(graph: COUNTRY)
+  removeCountryFromTreaty(countryId: Int!, treatyId: Int!): Country! @join__field(graph: COUNTRY)
+  createCity(input: CreateCityInput!): City! @join__field(graph: COUNTRY)
+  updateCity(input: UpdateCityInput!): City! @join__field(graph: COUNTRY)
+  removeCity(id: Int!): Int @join__field(graph: COUNTRY)
+  createTreaty(input: CreateTreatyInput!): Treaty! @join__field(graph: COUNTRY)
+  updateTreaty(input: UpdateTreatyInput!): Treaty! @join__field(graph: COUNTRY)
+  removeTreaty(id: Int!): Treaty! @join__field(graph: COUNTRY)
+  createRestaurant(input: CreateRestaurantInput!): Restaurant! @join__field(graph: FOOD)
+  updateRestaurant(input: UpdateRestaurantInput!): Restaurant! @join__field(graph: FOOD)
+  removeRestaurant(id: Int!): Int @join__field(graph: FOOD)
+  createMeal(input: CreateMealInput!): Meal! @join__field(graph: FOOD)
+  updateMeal(input: UpdateMealInput!): Meal! @join__field(graph: FOOD)
+  removeMeal(id: Int!): Int @join__field(graph: FOOD)
+  createHobby(input: CreateHobbyInput!): Hobby! @join__field(graph: PEOPLE)
+  removeHobby(id: Int!): Int @join__field(graph: PEOPLE)
+  createPerson(input: CreatePersonInput!): Person! @join__field(graph: PEOPLE)
+  removePerson(id: Int!): Int @join__field(graph: PEOPLE)
+}
+
+type Person
+  @join__type(graph: PEOPLE, key: "id")
+{
+  id: Int!
+  firstName: String!
+  lastName: String!
+  occupation: String!
+  addresses: [Address!]
+  hobbies: [Hobby!]
+}
+
+enum PriceRange
+  @join__type(graph: FOOD)
+{
+  Cheap
+  Moderate
+  Expensive
+  Luxury
+}
+
+type Query
+  @join__type(graph: AUTH)
+  @join__type(graph: COUNTRY)
+  @join__type(graph: FOOD)
+  @join__type(graph: PEOPLE)
+{
+  role(id: Float!): Role! @join__field(graph: AUTH)
+  roles(name: String): [Role!]! @join__field(graph: AUTH)
+  right(id: Float!): Right! @join__field(graph: AUTH)
+  rights(name: String): [Right!]! @join__field(graph: AUTH)
+  user(id: Float!): User! @join__field(graph: AUTH)
+  users(userName: String): [User!]! @join__field(graph: AUTH)
+  countries: [Country!]! @join__field(graph: COUNTRY)
+  findOne(id: Int!): Country! @join__field(graph: COUNTRY)
+  cities(name: String): [City!]! @join__field(graph: COUNTRY)
+  city(id: Int!): City! @join__field(graph: COUNTRY)
+  treaties: [Treaty!]! @join__field(graph: COUNTRY)
+  treaty(id: Int!): Treaty! @join__field(graph: COUNTRY)
+  restaurants(name: String): [Restaurant!]! @join__field(graph: FOOD)
+  restaurant(id: Int!): Restaurant! @join__field(graph: FOOD)
+  meals(name: String): [Meal!]! @join__field(graph: FOOD)
+  meal(id: Int!): Meal! @join__field(graph: FOOD)
+  hobbies(name: String): [Hobby!]! @join__field(graph: PEOPLE)
+  hobby(id: Int!): Hobby! @join__field(graph: PEOPLE)
+  persons(firstName: String): [Person!]! @join__field(graph: PEOPLE)
+  person(id: Int!): Person! @join__field(graph: PEOPLE)
+}
+
+type Restaurant
+  @join__type(graph: FOOD, key: "id")
+{
+  id: Int!
+  name: String!
+  priceRange: PriceRange
+  meals: [Meal!]
+  cityId: Float!
+  city: City!
+}
+
+type Right
+  @join__type(graph: AUTH)
+{
+  id: Int!
+  name: String!
+  description: String!
+  roles: [Role!]
+}
+
+type Role
+  @join__type(graph: AUTH)
+{
+  id: Int!
+  name: String!
+  description: String!
+  rights: [Right!]
+  users: [User!]
+}
+
+type Treaty
+  @join__type(graph: COUNTRY)
+{
+  id: Int!
+  name: String!
+  countries: [Country!]
+}
+
+input UpdateCityInput
+  @join__type(graph: COUNTRY)
+{
+  name: String
+  population: Int
+  countryId: Int
+  id: Int!
+}
+
+input UpdateCountryInput
+  @join__type(graph: COUNTRY)
+{
+  name: String
+  population: Int
+  continent: Continent
+  id: Int!
+}
+
+input UpdateMealInput
+  @join__type(graph: FOOD)
+{
+  name: String
+  id: Int!
+}
+
+input UpdateRestaurantInput
+  @join__type(graph: FOOD)
+{
+  name: String
+  priceRange: PriceRange
+  cityId: Int
+  id: Int!
+}
+
+input UpdateRightInput
+  @join__type(graph: AUTH)
+{
+  name: String
+  description: String
+  id: Int!
+}
+
+input UpdateRoleInput
+  @join__type(graph: AUTH)
+{
+  name: String
+  description: String
+  id: Int!
+}
+
+input UpdateTreatyInput
+  @join__type(graph: COUNTRY)
+{
+  name: String
+  id: Int!
+}
+
+input UpdateUserInput
+  @join__type(graph: AUTH)
+{
+  userName: String
+  firstName: String
+  lastName: String
+  id: Int!
+}
+
+type User
+  @join__type(graph: AUTH)
+{
+  id: Int!
+  userName: String!
+  firstName: String!
+  lastName: String!
+  refreshToken: String!
+  roles: [Role!]
 }

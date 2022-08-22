@@ -22,7 +22,12 @@ import { PersonModule } from "./person/person.module";
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), "people.schema.graphql"),
+
+      autoSchemaFile: {
+        federation: 2,
+        path: join(process.cwd(), "people.schema.graphql"),
+      },
+
       buildSchemaOptions: {
         orphanedTypes: [City],
       },

@@ -1,4 +1,4 @@
-federation_version: 1
+federation_version: 2
 subgraphs:
   auth:
     routing_url: http://localhost:3100/graphql

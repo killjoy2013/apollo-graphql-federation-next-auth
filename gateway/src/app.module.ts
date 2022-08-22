@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { readFileSync } from 'fs';
 import {
   SDLValidationContext,
   ValidationContext,
@@ -24,6 +25,7 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
           origin: '*',
           credentials: true,
         },
+        introspection: true,
         plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
         playground: false,
         context: ({ req }) => {
@@ -52,26 +54,27 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
             },
           });
         },
-        supergraphSdl: new IntrospectAndCompose({
-          subgraphs: [
-            {
-              name: 'auth',
-              url: process.env.AUTH_SUBGRAPH,
-            },
-            {
-              name: 'country',
-              url: process.env.COUNTRY_SUBGRAPH,
-            },
-            {
-              name: 'food',
-              url: process.env.FOOD_SUBGRAPH,
-            },
-            {
-              name: 'people',
-              url: process.env.PEOPLE_SUBGRAPH,
-            },
-          ],
-        }),
+        supergraphSdl: readFileSync('./prod-schema.graphql').toString(),
+        // supergraphSdl: new IntrospectAndCompose({
+        //   subgraphs: [
+        //     {
+        //       name: 'auth',
+        //       url: process.env.AUTH_SUBGRAPH,
+        //     },
+        //     {
+        //       name: 'country',
+        //       url: process.env.COUNTRY_SUBGRAPH,
+        //     },
+        //     {
+        //       name: 'food',
+        //       url: process.env.FOOD_SUBGRAPH,
+        //     },
+        //     {
+        //       name: 'people',
+        //       url: process.env.PEOPLE_SUBGRAPH,
+        //     },
+        //   ],
+        // }),
       },
     }),
   ],

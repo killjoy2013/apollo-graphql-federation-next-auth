@@ -20,7 +20,12 @@ import { RestaurantModule } from './restaurant/restaurant.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), 'food.schema.graphql'),
+
+      autoSchemaFile: {
+        federation: 2,
+        path: join(process.cwd(), 'food.schema.graphql'),
+      },
+
       buildSchemaOptions: {
         orphanedTypes: [City],
       },

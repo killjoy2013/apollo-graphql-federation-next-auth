@@ -1,4 +1,36 @@
-type Restaurant @key(fields: "id") {
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+{
+  query: Query
+  mutation: Mutation
+}
+
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external", "@override", "@requires"])
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+directive @key(fields: federation__FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
+
+directive @requires(fields: federation__FieldSet!) on FIELD_DEFINITION
+
+directive @federation__provides(fields: federation__FieldSet!) on FIELD_DEFINITION
+
+directive @external(reason: String) on OBJECT | FIELD_DEFINITION
+
+directive @federation__tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+directive @federation__extends on OBJECT | INTERFACE
+
+directive @shareable on OBJECT | FIELD_DEFINITION
+
+directive @federation__inaccessible on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+directive @override(from: String!) on FIELD_DEFINITION
+
+type Restaurant
+  @key(fields: "id")
+{
   id: Int!
   name: String!
   priceRange: PriceRange
@@ -20,8 +52,10 @@ type Meal {
   restaurants: [Restaurant!]
 }
 
-type City @extends @key(fields: "id") {
-  id: Int! @external
+type City
+  @key(fields: "id")
+{
+  id: Int!
   restaurants: [Restaurant!]
 }
 
@@ -30,6 +64,8 @@ type Query {
   restaurant(id: Int!): Restaurant!
   meals(name: String): [Meal!]!
   meal(id: Int!): Meal!
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
 }
 
 type Mutation {
@@ -62,3 +98,27 @@ input UpdateMealInput {
   name: String
   id: Int!
 }
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+scalar link__Import
+
+scalar federation__FieldSet
+
+scalar _Any
+
+type _Service {
+  sdl: String
+}
+
+union _Entity = City | Restaurant
