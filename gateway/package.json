@@ -11,7 +11,7 @@
     "generate-supergraph": "rover supergraph compose --config ./supergraph.yaml > prod-schema.graphql",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "rover supergraph compose --config ./supergraph.yaml > prod-schema.graphql && nest start --watch",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "rover:compose": "rover supergraph compose --config ./supergraph.yaml > prod-schema.graphql",

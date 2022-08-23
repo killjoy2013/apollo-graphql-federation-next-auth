@@ -1,6 +1,6 @@
 rover subgraph introspect http://localhost:3300/graphql > food.schema.graphql
 
 
-rover subgraph publish My-Graph-V1@current \
+rover subgraph publish My-Graph-V2@current \
   --name food --schema ./food.schema.graphql \
-  --routing-url http://food.prod.svc.cluster.local:3300/graphql
+  --routing-url http://localhost:3300/graphql

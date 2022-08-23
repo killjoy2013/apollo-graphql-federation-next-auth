@@ -1,6 +1,6 @@
 rover subgraph introspect http://localhost:3200/graphql > country.schema.graphql
 
 
-rover subgraph publish My-Graph-V1@current \
+rover subgraph publish My-Graph-V2@current \
   --name country --schema ./country.schema.graphql \
-  --routing-url http://country.prod.svc.cluster.local:3200/graphql
+  --routing-url http://localhost:3200/graphql

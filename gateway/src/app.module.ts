@@ -1,10 +1,9 @@
-import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
+import { RemoteGraphQLDataSource } from '@apollo/gateway';
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { readFileSync } from 'fs';
 import {
   SDLValidationContext,
   ValidationContext,
@@ -54,27 +53,6 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
             },
           });
         },
-        supergraphSdl: readFileSync('./prod-schema.graphql').toString(),
-        // supergraphSdl: new IntrospectAndCompose({
-        //   subgraphs: [
-        //     {
-        //       name: 'auth',
-        //       url: process.env.AUTH_SUBGRAPH,
-        //     },
-        //     {
-        //       name: 'country',
-        //       url: process.env.COUNTRY_SUBGRAPH,
-        //     },
-        //     {
-        //       name: 'food',
-        //       url: process.env.FOOD_SUBGRAPH,
-        //     },
-        //     {
-        //       name: 'people',
-        //       url: process.env.PEOPLE_SUBGRAPH,
-        //     },
-        //   ],
-        // }),
       },
     }),
   ],

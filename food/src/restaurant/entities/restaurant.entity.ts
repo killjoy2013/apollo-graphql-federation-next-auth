@@ -45,9 +45,6 @@ export class Restaurant {
   })
   meals: Meal[];
 
-  // @Field(() => City)
-  // city: City;
-
   @Column()
   @Field()
   cityId: number;
