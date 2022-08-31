@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { Right } from './right.entity';
 
-@Entity()
+@Entity({ schema: 'auth' })
 @ObjectType()
 export class Role extends BaseEntity {
   @PrimaryGeneratedColumn('increment')

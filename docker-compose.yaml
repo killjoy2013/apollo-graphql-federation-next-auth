@@ -83,7 +83,7 @@ services:
       - DEBUG=false
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=auth
+      - POSTGRES_DB=pocdb
       - PGUSER=postgres
       - PG_TRUST_LOCALNET=true
 

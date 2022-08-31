@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Role } from './role.entity';
 
-@Entity()
+@Entity({ schema: 'auth' })
 @ObjectType()
 export class Right extends BaseEntity {
   @PrimaryGeneratedColumn('increment')

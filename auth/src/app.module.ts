@@ -31,12 +31,15 @@ import { UserModule } from './user/user.module';
       },
     }),
 
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [Role, Right, User],
-      //synchronize: true,
-      //logging: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        type: 'postgres',
+        url: process.env.DATABASE_URL,
+        //entities: [Role, Right, User],
+        autoLoadEntities: true,
+        synchronize: false,
+        logging: true,
+      }),
     }),
     RoleRightModule,
     AuthModule,

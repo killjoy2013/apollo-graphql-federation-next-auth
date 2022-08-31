@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { DataSource, Like, Repository } from 'typeorm';
 import { CreateRightInput } from './dto/create-right.input';
 import { UpdateRightInput } from './dto/update-right.input';
 import { Right } from './entities/right.entity';
-import { Connection } from 'typeorm';
 
 @Injectable()
 export class RightService {
   constructor(
     @InjectRepository(Right) private rightRepo: Repository<Right>,
-    private readonly connection: Connection,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createRightInput: CreateRightInput) {
@@ -18,14 +17,14 @@ export class RightService {
   }
 
   async findOne(id: number) {
-    return await this.rightRepo.findOne(id);
+    return await this.rightRepo.findOneBy({ id });
   }
 
   async findAll(name: string = null): Promise<Right[]> {
     if (name !== null) {
       return await this.rightRepo.find({
         where: {
-          firstName: Like(`%${name}%`),
+          name: Like(`%${name}%`),
         },
         relations: ['roles'],
       });
@@ -55,12 +54,12 @@ export class RightService {
   }
 
   async update(updateRightInput: UpdateRightInput) {
-    let found = await this.rightRepo.findOne(updateRightInput.id);
+    let found = await this.rightRepo.findOneBy({ id: updateRightInput.id });
     return await this.rightRepo.save({ ...found, ...updateRightInput });
   }
 
   async remove(id: number) {
-    let found = await this.rightRepo.findOne(id);
+    let found = await this.rightRepo.findOneBy({ id });
     if (found) {
       await this.rightRepo.remove(found);
       return id;
@@ -70,7 +69,7 @@ export class RightService {
   }
 
   async assignRightToRole(rightName: string, roleName: string) {
-    await this.connection.query(`select sp_assign_right_to_role ($1,$2);`, [
+    await this.dataSource.query(`select sp_assign_right_to_role ($1,$2);`, [
       rightName,
       roleName,
     ]);
@@ -78,7 +77,7 @@ export class RightService {
     return 'OK';
   }
   async revokeRightFromRole(rightName: string, roleName: string) {
-    await this.connection.query(`select sp_revoke_right_from_role ($1,$2);`, [
+    await this.dataSource.query(`select sp_revoke_right_from_role ($1,$2);`, [
       rightName,
       roleName,
     ]);

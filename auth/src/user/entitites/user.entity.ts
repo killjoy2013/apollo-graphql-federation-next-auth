@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../role-right/entities/role.entity';
 
-@Entity()
+@Entity({ schema: 'auth' })
 @ObjectType()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
@@ -36,7 +36,7 @@ export class User extends BaseEntity {
   @ManyToMany(() => Role, (role) => role.users)
   @Field(() => [Role], { nullable: true })
   @JoinTable({
-    name: 'user_role',
+    name: 'auth.user_role',
     joinColumn: {
       name: 'user_id',
       referencedColumnName: 'id',

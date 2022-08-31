@@ -15,7 +15,7 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    return await this.userRepo.findOne(id);
+    return await this.userRepo.findOneBy({ id });
   }
 
   async findAll(userName: string = null): Promise<User[]> {
@@ -34,12 +34,20 @@ export class UserService {
   }
 
   async update(updateUserInput: UpdateUserInput) {
-    let found = await this.userRepo.findOne(updateUserInput.id);
+    let found = await this.userRepo.findOne({
+      where: {
+        id: updateUserInput.id,
+      },
+    });
     return await this.userRepo.save({ ...found, ...updateUserInput });
   }
 
   async remove(id: number) {
-    let found = await this.userRepo.findOne(id);
+    let found = await this.userRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.userRepo.remove(found);
       return id;
