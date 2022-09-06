@@ -25,16 +25,28 @@ export class CityService {
   }
 
   async findOne(id: number): Promise<City> {
-    return await this.cityRepo.findOne(id);
+    return await this.cityRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(input: UpdateCityInput): Promise<City> {
-    let found = await this.cityRepo.findOne(input.id);
+    let found = await this.cityRepo.findOne({
+      where: {
+        id: input.id,
+      },
+    });
     return await this.cityRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.cityRepo.findOne(id);
+    let found = await this.cityRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.cityRepo.remove(found);
       return id;

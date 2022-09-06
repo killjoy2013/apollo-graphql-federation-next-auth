@@ -25,16 +25,16 @@ export class CountryService {
   }
 
   async findOne(id: number): Promise<Country> {
-    return await this.countryRepo.findOne(id);
+    return await this.countryRepo.findOne({ where: { id } });
   }
 
   async update(input: UpdateCountryInput): Promise<Country> {
-    let found = await this.countryRepo.findOne(input.id);
+    let found = await this.countryRepo.findOne({ where: { id: input.id } });
     return await this.countryRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.countryRepo.findOne(id);
+    let found = await this.countryRepo.findOne({ where: { id } });
     if (found) {
       await this.countryRepo.remove(found);
       return id;
@@ -44,11 +44,15 @@ export class CountryService {
   }
 
   async addToTreaty(countryId: number, treatyId: number): Promise<Country> {
-    let foundCountry = await this.countryRepo.findOne(
-      { id: countryId },
-      { relations: ['treaties'] },
-    );
-    let foundTreaty = await this.treatyRepo.findOne({ id: treatyId });
+    let foundCountry = await this.countryRepo.findOne({
+      where: { id: countryId },
+      relations: {
+        treaties: true,
+      },
+    });
+    let foundTreaty = await this.treatyRepo.findOne({
+      where: { id: treatyId },
+    });
 
     if (foundCountry && foundTreaty) {
       foundCountry.treaties = foundCountry.treaties
@@ -65,11 +69,18 @@ export class CountryService {
     countryId: number,
     treatyId: number,
   ): Promise<Country> {
-    let foundCountry = await this.countryRepo.findOne(
-      { id: countryId },
-      { relations: ['treaties'] },
-    );
-    let foundTreaty = await this.treatyRepo.findOne({ id: treatyId });
+    let foundCountry = await this.countryRepo.findOne({
+      where: {
+        id: countryId,
+      },
+      relations: {
+        treaties: true,
+      },
+    });
+
+    let foundTreaty = await this.treatyRepo.findOne({
+      where: { id: treatyId },
+    });
 
     if (foundCountry && foundTreaty) {
       foundCountry.treaties = foundCountry.treaties

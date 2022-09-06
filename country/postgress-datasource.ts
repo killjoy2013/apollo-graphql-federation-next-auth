@@ -12,7 +12,7 @@ const options: PostgresConnectionOptions = {
   migrations: ['dist/src/migrations/**/*.js'],
   migrationsRun: true,
   url: process.env.DATABASE_URL,
-  schema: 'auth',
+  schema: 'country',
 };
 
 console.log({ options });

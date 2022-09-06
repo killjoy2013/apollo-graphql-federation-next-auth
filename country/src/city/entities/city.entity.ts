@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ schema: 'country' })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class City {

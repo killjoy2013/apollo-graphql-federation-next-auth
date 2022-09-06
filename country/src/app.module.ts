@@ -37,8 +37,8 @@ import { TreatyModule } from './treaty/treaty.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Country, City, Treaty],
-      //synchronize: true,
+      //entities: [Country, City, Treaty],
+
       //logging: true,
     }),
 

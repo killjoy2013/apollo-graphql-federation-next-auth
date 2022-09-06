@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { Treaty } from './../../treaty/entities/treaty.entity';
 
-@Entity()
+@Entity({ schema: 'country' })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Country {

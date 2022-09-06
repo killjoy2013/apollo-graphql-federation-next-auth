@@ -9,8 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "yarn migration:run&&nest start",
-    "start:dev": "nest start --watch",
+    "start": "yarn migration:run && nest start",
+    "start:dev": "yarn migration:run && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "rover:create-subgraph-schema": "rover subgraph introspect http://localhost:3100/graphql > auth.schema.graphql",
@@ -46,8 +46,7 @@
     "reflect-metadata": "~0.1.13",
     "rimraf": "~3.0.2",
     "rxjs": "~7.2.0",
-    "typeorm": "0.3.4",
-    "typeorm-extension": "^2.1.9"
+    "typeorm": "0.3.4"
   },
   "devDependencies": {
     "@nestjs/cli": "~8.0.0",

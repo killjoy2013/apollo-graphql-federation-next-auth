@@ -36,7 +36,7 @@ export class User extends BaseEntity {
   @ManyToMany(() => Role, (role) => role.users)
   @Field(() => [Role], { nullable: true })
   @JoinTable({
-    name: 'auth.user_role',
+    name: 'user_role',
     joinColumn: {
       name: 'user_id',
       referencedColumnName: 'id',

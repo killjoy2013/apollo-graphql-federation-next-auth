@@ -21,16 +21,28 @@ export class TreatyService {
   }
 
   async findOne(id: number): Promise<Treaty> {
-    return await this.treatyRepo.findOne(id);
+    return await this.treatyRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(input: UpdateTreatyInput): Promise<Treaty> {
-    let found = await this.treatyRepo.findOne(input.id);
+    let found = await this.treatyRepo.findOne({
+      where: {
+        id: input.id,
+      },
+    });
     return await this.treatyRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.treatyRepo.findOne(id);
+    let found = await this.treatyRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.treatyRepo.remove(found);
       return id;
