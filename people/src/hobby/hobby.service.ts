@@ -27,11 +27,19 @@ export class HobbyService {
   }
 
   async findOne(id: number): Promise<Hobby> {
-    return await this.hobbyRepo.findOne(id);
+    return await this.hobbyRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async remove(id: number) {
-    let found = await this.hobbyRepo.findOne(id);
+    let found = await this.hobbyRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.hobbyRepo.remove(found);
       return id;

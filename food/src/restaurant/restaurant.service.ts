@@ -29,21 +29,31 @@ export class RestaurantService {
 
   async findByCityId(cityId: number): Promise<Restaurant[]> {
     return await this.restaurantRepo.find({
-      cityId,
+      where: {
+        cityId,
+      },
     });
   }
 
   async findOne(id: number): Promise<Restaurant> {
-    return await this.restaurantRepo.findOne(id);
+    return await this.restaurantRepo.findOne({ where: { id } });
   }
 
   async update(input: UpdateRestaurantInput): Promise<Restaurant> {
-    let found = await this.restaurantRepo.findOne(input.id);
+    let found = await this.restaurantRepo.findOne({
+      where: {
+        id: input.id,
+      },
+    });
     return await this.restaurantRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.restaurantRepo.findOne(id);
+    let found = await this.restaurantRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.restaurantRepo.remove(found);
       return id;

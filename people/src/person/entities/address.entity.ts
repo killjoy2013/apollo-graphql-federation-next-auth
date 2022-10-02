@@ -11,7 +11,7 @@ import {
 import { City } from "./city.proxy.entity";
 import { Person } from "./person.entity";
 
-@Entity()
+@Entity({ schema: "people" })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Address extends BaseEntity {

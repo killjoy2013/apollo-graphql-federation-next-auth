@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { PriceRange } from '../enums';
 
-@Entity()
+@Entity({ schema: 'food' })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Restaurant {

@@ -5,7 +5,6 @@
 type Restaurant {
   id: Int!
   name: String!
-  michelinStars: Float!
   priceRange: PriceRange
   meals: [Meal!]
   cityId: Float!

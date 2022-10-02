@@ -1,5 +1,4 @@
 import { ValidationPipe } from '@nestjs/common';
-import * as typeORM from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 

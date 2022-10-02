@@ -1,45 +1,15 @@
-schema
-  @link(url: "https://specs.apollo.dev/link/v1.0")
-{
-  query: Query
-  mutation: Mutation
-}
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
 
-extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external", "@override", "@requires"])
-
-directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
-
-directive @key(fields: federation__FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
-
-directive @requires(fields: federation__FieldSet!) on FIELD_DEFINITION
-
-directive @federation__provides(fields: federation__FieldSet!) on FIELD_DEFINITION
-
-directive @external(reason: String) on OBJECT | FIELD_DEFINITION
-
-directive @federation__tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
-
-directive @federation__extends on OBJECT | INTERFACE
-
-directive @shareable on OBJECT | FIELD_DEFINITION
-
-directive @federation__inaccessible on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
-
-directive @override(from: String!) on FIELD_DEFINITION
-
-type Address
-  @key(fields: "id")
-{
+type Address {
   id: Int!
   detail: String!
   personId: Int!
   city: City!
 }
 
-type Person
-  @key(fields: "id")
-{
+type Person {
   id: Int!
   firstName: String!
   lastName: String!
@@ -48,9 +18,7 @@ type Person
   hobbies: [Hobby!]
 }
 
-type Hobby
-  @key(fields: "id")
-{
+type Hobby {
   id: Int!
   name: String!
   difficulty: Difficulty
@@ -63,9 +31,7 @@ enum Difficulty {
   Difficult
 }
 
-type City
-  @key(fields: "id")
-{
+type City {
   id: Int!
   persons: [Person!]
 }
@@ -75,8 +41,6 @@ type Query {
   hobby(id: Int!): Hobby!
   persons(firstName: String): [Person!]!
   person(id: Int!): Person!
-  _entities(representations: [_Any!]!): [_Entity]!
-  _service: _Service!
 }
 
 type Mutation {
@@ -103,27 +67,3 @@ input CreateAddressInput {
   detail: String!
   cityId: Int!
 }
-
-enum link__Purpose {
-  """
-  `SECURITY` features provide metadata necessary to securely resolve fields.
-  """
-  SECURITY
-
-  """
-  `EXECUTION` features provide metadata necessary for operation execution.
-  """
-  EXECUTION
-}
-
-scalar link__Import
-
-scalar federation__FieldSet
-
-scalar _Any
-
-type _Service {
-  sdl: String
-}
-
-union _Entity = Address | City | Hobby | Person

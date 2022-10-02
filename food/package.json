@@ -9,8 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "yarn migration:run&&nest start",
-    "start:dev": "yarn migration:run&&nest start --watch",
+    "start": "yarn migration:run && nest start",
+    "start:dev": "yarn migration:run && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "rover:create-subgraph-schema": "rover subgraph introspect http://localhost:3300/graphql > food.schema.graphql",
@@ -21,10 +21,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:generate": "yarn build && yarn typeorm migration:generate -- -n",
-    "migration:run": "yarn typeorm migration:run",
-    "migration:revert": "yarn typeorm migration:revert",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js --config ./dist/ormconfig.js"
+    "migration:generate": "yarn build && yarn typeorm migration:generate -d dist/postgress-datasource.js src/migrations/new-migration",
+    "migration:run": "yarn typeorm migration:run -d dist/postgress-datasource.js",
+    "migration:create": "yarn typeorm migration:create src/migrations/new-migration",
+    "migration:revert": "yarn typeorm migration:revert"
   },
   "dependencies": {
     "@apollo/federation": "~0.35.1",
@@ -36,7 +36,7 @@
     "@nestjs/graphql": "~10.0.21",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "~8.0.0",
-    "@nestjs/typeorm": "~8.0.2",
+    "@nestjs/typeorm": "~9.0.1",
     "apollo-server-express": "~3.10.1",
     "class-transformer": "0.5.1",
     "class-validator": "~0.13.1",
@@ -46,7 +46,7 @@
     "reflect-metadata": "~0.1.13",
     "rimraf": "~3.0.2",
     "rxjs": "~7.2.0",
-    "typeorm": "~0.2.38"
+    "typeorm": "0.3.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

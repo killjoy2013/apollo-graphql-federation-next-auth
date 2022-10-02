@@ -25,16 +25,28 @@ export class MealService {
   }
 
   async findOne(id: number): Promise<Meal> {
-    return await this.mealRepo.findOne(id);
+    return await this.mealRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(input: UpdateMealInput): Promise<Meal> {
-    let found = await this.mealRepo.findOne(input.id);
+    let found = await this.mealRepo.findOne({
+      where: {
+        id: input.id,
+      },
+    });
     return await this.mealRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.mealRepo.findOne(id);
+    let found = await this.mealRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.mealRepo.remove(found);
       return id;

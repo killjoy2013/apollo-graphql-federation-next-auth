@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({ schema: 'food' })
 @ObjectType()
 export class Meal {
   @PrimaryGeneratedColumn('increment')

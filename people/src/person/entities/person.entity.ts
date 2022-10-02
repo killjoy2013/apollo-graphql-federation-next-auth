@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { Address } from "./address.entity";
 
-@Entity()
+@Entity({ schema: "people" })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Person extends BaseEntity {

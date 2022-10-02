@@ -25,8 +25,8 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
           credentials: true,
         },
         introspection: true,
-        plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
-        playground: false,
+        //plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+        //playground: false,
         context: ({ req }) => {
           if (req.user) {
             const user = req.user;

@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { Difficulty } from "../enums";
 
-@Entity()
+@Entity({ schema: "people" })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Hobby {

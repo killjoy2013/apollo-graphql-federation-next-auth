@@ -38,7 +38,11 @@ export class PersonService {
     //   detail: input.address.detail,
     // });
 
-    let result = await this.personRepo.findOne({ id: newPerson.id });
+    let result = await this.personRepo.findOne({
+      where: {
+        id: newPerson.id,
+      },
+    });
     return result;
   }
 
@@ -58,11 +62,19 @@ export class PersonService {
   }
 
   async findOne(id: number): Promise<Person> {
-    return await this.personRepo.findOne(id);
+    return await this.personRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async findAddressById(id: number): Promise<Address> {
-    return await this.addressRepo.findOne(id);
+    return await this.addressRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async findByCityId(cityId: number): Promise<Person[]> {
@@ -84,7 +96,11 @@ export class PersonService {
   }
 
   async remove(id: number) {
-    let found = await this.personRepo.findOne(id);
+    let found = await this.personRepo.findOne({
+      where: {
+        id,
+      },
+    });
     if (found) {
       await this.personRepo.remove(found);
       return id;
