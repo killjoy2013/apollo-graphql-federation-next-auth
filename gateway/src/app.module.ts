@@ -21,7 +21,7 @@ function jwtValidationRule(context: ValidationContext | SDLValidationContext) {
       server: {
         // ... Apollo server options
         cors: {
-          origin: '*',
+          origin: 'http://localhost:3000',
           credentials: true,
         },
         introspection: true,

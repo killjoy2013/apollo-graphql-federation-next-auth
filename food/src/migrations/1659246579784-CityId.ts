@@ -5,11 +5,11 @@ export class CityId1659246579784 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "restaurant" ADD "cityId" integer NOT NULL`,
+      `ALTER TABLE "food"."restaurant" ADD "cityId" integer NOT NULL`,
     );
 
     await queryRunner.query(`
-        INSERT INTO public.restaurant (id, "name", "cityId")
+        INSERT INTO "food".restaurant (id, "name", "cityId")
         VALUES (1, 'Hunger', 5),
                (2, 'La Maison', 2),
                (3, 'Rouge', 2),
@@ -17,13 +17,15 @@ export class CityId1659246579784 implements MigrationInterface {
                (5, 'Noma', 5),
                (6, 'Best Teppenyaki', 3);
 
-               SELECT setval('restaurant_id_seq', 7) 
+               SELECT setval('food.restaurant_id_seq', 7) 
         `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`ALTER TABLE "restaurant" DROP COLUMN "cityId"`);
+    await queryRunner.query(
+      `ALTER TABLE "food"."restaurant" DROP COLUMN "cityId"`,
+    );
 
-    await queryRunner.query(`DELETE FROM public.restaurant;`);
+    await queryRunner.query(`DELETE FROM "food".restaurant;`);
   }
 }

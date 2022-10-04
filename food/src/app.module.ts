@@ -38,6 +38,7 @@ import { RestaurantModule } from './restaurant/restaurant.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
+      entities: [Restaurant, Meal],
     }),
 
     RestaurantModule,
