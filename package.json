@@ -1,0 +1,16 @@
+{
+  "private": "true",
+  "name": "country-food-federation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/killjoy2013/apollo-graphql-federation-next-auth.git",
+  "author": "murat arslan <killjoy_tr@yahoo.com>",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

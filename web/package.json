@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-mui",
+  "name": "web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "prisma generate",
     "format": "prettier \"**/*.{ts,tsx,css,graphql}\" --write",
+    "prisma:generate": "prisma generate",
     "postinstall": "prisma generate"
   },
   "dependencies": {
