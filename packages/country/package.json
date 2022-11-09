@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "yarn migration:run && nest start",
-    "start:dev": "nest start --watch && yarn migration:run",
+    "start:dev": "yarn migration:run && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "rover:create-subgraph-schema": "rover subgraph introspect http://localhost:3200/graphql > country.schema.graphql",

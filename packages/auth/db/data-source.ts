@@ -12,7 +12,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/db/migrations/**/*.js'],
   migrationsRun: true,
   url: process.env.DATABASE_URL,
-  schema: 'country',
+  schema: 'auth',
 };
 
 export default new DataSource(dataSourceOptions);

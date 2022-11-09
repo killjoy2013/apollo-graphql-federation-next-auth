@@ -21,10 +21,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:generate": "yarn build && yarn typeorm migration:generate -d dist/postgress-datasource.js src/migrations/new-migration",
-    "migration:run": "yarn typeorm migration:run -d dist/postgress-datasource.js",
-    "migration:create": "yarn typeorm migration:create src/migrations/new-migration",
-    "migration:revert": "yarn typeorm migration:revert"
+    "typeorm": "yarn build && npx typeorm -d dist/db/data-source.js",
+    "migration:generate": "yarn typeorm -- migration:generate db/migrations/new-migration",
+    "migration:run": "yarn typeorm -- migration:run",
+    "migration:create": "yarn build && npx typeorm migration:create db/migrations/new-migration",
+    "migration:revert": "yarn typeorm -- migration:revert"
   },
   "dependencies": {
     "@apollo/federation": "~0.35.1",

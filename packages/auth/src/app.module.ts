@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from 'db/data-source';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { Right } from './role-right/entities/right.entity';
@@ -31,16 +32,7 @@ import { UserModule } from './user/user.module';
       },
     }),
 
-    TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        //entities: [Role, Right, User],
-        autoLoadEntities: true,
-        synchronize: false,
-        logging: true,
-      }),
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     RoleRightModule,
     AuthModule,
     UserModule,
