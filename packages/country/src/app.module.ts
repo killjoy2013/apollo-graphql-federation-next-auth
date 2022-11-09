@@ -7,12 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { dataSourceOptions } from '../db/data-source';
 import { AuthModule } from './auth/auth.module';
 import { CityModule } from './city/city.module';
-import { City } from './city/entities/city.entity';
 import { CountryModule } from './country/country.module';
-import { Country } from './country/entities/country.entity';
-import { Treaty } from './treaty/entities/treaty.entity';
 import { TreatyModule } from './treaty/treaty.module';
 
 @Module({
@@ -32,11 +30,7 @@ import { TreatyModule } from './treaty/treaty.module';
       },
     }),
 
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [Country, City, Treaty],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
 
     CountryModule,
     CityModule,
