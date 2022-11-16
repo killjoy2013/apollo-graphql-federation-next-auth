@@ -1,6 +1,6 @@
 {
-  "private": "true",
   "name": "federation",
+  "private": "true",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/killjoy2013/apollo-graphql-federation-next-auth.git",
@@ -13,26 +13,30 @@
     "build": "nest build"
   },
   "dependencies": {
-    "@nestjs/typeorm": "~9.0.1",
-    "typeorm": "0.3.4",
-    "@apollo/federation": "~0.35.1",
-    "@apollo/subgraph": "~2.0.5",
-    "@nestjs/apollo": "~10.0.19",
-    "@nestjs/common": "~8.0.0",
-    "@nestjs/config": "~1.0.2",
-    "@nestjs/core": "~8.0.0",
-    "@nestjs/graphql": "~10.0.21",
+    "@apollo/federation": "~0.37.1",
+    "@apollo/subgraph": "~2.1.4",
+    "@nestjs/apollo": "~10.1.4",
+    "@nestjs/common": "~9.2.0",
+    "@nestjs/config": "~2.2.0",
+    "@nestjs/core": "~9.2.0",
+    "@nestjs/graphql": "~10.1.5",
     "@nestjs/mapped-types": "*",
-    "@nestjs/platform-express": "~8.0.0",
+    "@nestjs/platform-express": "~9.2.0",
+    "@nestjs/typeorm": "~9.0.1",
     "apollo-server-express": "~3.10.1",
     "class-transformer": "0.5.1",
-    "class-validator": "~0.13.1",
     "dotenv": "~10.0.0",
     "graphql": "~16.5.0",
     "pg": "~8.8.0",
     "reflect-metadata": "~0.1.13",
     "rimraf": "~3.0.2",
-    "rxjs": "~7.2.0"
+    "rxjs": "~7.2.0",
+    "typeorm": "~0.3.10",
+    "class-validator": "~0.13.2",
+    "cookie-parser": "~1.4.6",
+    "express-jwt": "~6.1.0",
+    "graphql-playground-middleware-express": "~1.7.23",
+    "pg-connection-string": "~2.5.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -58,5 +62,6 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "packageManager": "yarn@1.22.19"
 }

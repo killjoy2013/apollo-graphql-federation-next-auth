@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from 'db/data-source';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { Meal } from './meal/entities/meal.entity';
@@ -35,11 +36,7 @@ import { RestaurantModule } from './restaurant/restaurant.module';
       },
     }),
 
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [Restaurant, Meal],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
 
     RestaurantModule,
     MealModule,

@@ -7,6 +7,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { dataSourceOptions } from "db/data-source";
 import { join } from "path";
 import { AuthModule } from "./auth/auth.module";
 import { Hobby } from "./hobby/entities/hobby.entity";
@@ -38,12 +39,7 @@ import { PersonModule } from "./person/person.module";
       },
     }),
 
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      url: process.env.DATABASE_URL,
-
-      entities: [Person, Hobby, Address],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
 
     HobbyModule,
     PersonModule,
