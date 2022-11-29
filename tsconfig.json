@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
     "module": "commonjs",
     "esModuleInterop": true,
     "declaration": true,
@@ -10,11 +9,6 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "paths": {
-      "src/*": ["src/*"]
-    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -22,5 +16,22 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "references": [
+    {
+      "path": "./packages/auth"
+    },
+    {
+      "path": "./packages/country"
+    },
+    {
+      "path": "./packages/food"
+    },
+    {
+      "path": "./packages/people"
+    },
+    {
+      "path": "./packages/gateway"
+    }
+  ]
 }

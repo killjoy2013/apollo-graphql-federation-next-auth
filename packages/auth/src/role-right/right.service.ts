@@ -36,7 +36,7 @@ export class RightService {
   }
 
   async findByRole(roleId: number) {
-    let baseQueryBuilder = this.rightRepo.createQueryBuilder('right');
+    const baseQueryBuilder = this.rightRepo.createQueryBuilder('right');
 
     baseQueryBuilder.innerJoin(
       'role_right',
@@ -48,18 +48,18 @@ export class RightService {
       roleId,
     });
 
-    let dell = await baseQueryBuilder.getMany();
+    const dell = await baseQueryBuilder.getMany();
 
     return dell;
   }
 
   async update(updateRightInput: UpdateRightInput) {
-    let found = await this.rightRepo.findOneBy({ id: updateRightInput.id });
+    const found = await this.rightRepo.findOneBy({ id: updateRightInput.id });
     return await this.rightRepo.save({ ...found, ...updateRightInput });
   }
 
   async remove(id: number) {
-    let found = await this.rightRepo.findOneBy({ id });
+    const found = await this.rightRepo.findOneBy({ id });
     if (found) {
       await this.rightRepo.remove(found);
       return id;

@@ -64,7 +64,7 @@ export class RightResolver {
   @ResolveField()
   async roles(@Parent() right) {
     const { id } = right;
-    let foundRoles = await this.roleService.findRolesByRight(id);
+    const foundRoles = await this.roleService.findRolesByRight(id);
     return foundRoles;
   }
 }
