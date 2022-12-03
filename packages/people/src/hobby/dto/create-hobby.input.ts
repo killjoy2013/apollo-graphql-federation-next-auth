@@ -1,5 +1,5 @@
-import { InputType, Int, Field } from "@nestjs/graphql";
-import { Difficulty } from "../enums";
+import { InputType, Int, Field } from '@nestjs/graphql';
+import { Difficulty } from '../enums';
 
 @InputType()
 export class CreateHobbyInput {

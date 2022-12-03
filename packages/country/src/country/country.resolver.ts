@@ -10,7 +10,6 @@ import { CountryService } from './country.service';
 import { Country } from './entities/country.entity';
 import { CreateCountryInput } from './dto/create-country.input';
 import { UpdateCountryInput } from './dto/update-country.input';
-import { UseGuards } from '@nestjs/common';
 import { GetUser } from '../auth/get-user.decorator';
 
 @Resolver(() => Country)

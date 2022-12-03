@@ -63,7 +63,7 @@ export class RoleResolver {
   @ResolveField()
   async rights(@Parent() role) {
     const { id } = role;
-    let foundRights = await this.rightService.findByRole(id);
+    const foundRights = await this.rightService.findByRole(id);
     return foundRights;
   }
 }

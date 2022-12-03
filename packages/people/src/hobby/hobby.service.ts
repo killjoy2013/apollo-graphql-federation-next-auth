@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { CreateHobbyInput } from "./dto/create-hobby.input";
-import { Hobby } from "./entities/hobby.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateHobbyInput } from './dto/create-hobby.input';
+import { Hobby } from './entities/hobby.entity';
 
 @Injectable()
 export class HobbyService {
   constructor(
     @InjectRepository(Hobby)
-    private hobbyRepo: Repository<Hobby>
+    private hobbyRepo: Repository<Hobby>,
   ) {}
 
   async create(input: CreateHobbyInput): Promise<Hobby> {
@@ -18,8 +18,8 @@ export class HobbyService {
   async findAll(name: string = null): Promise<Hobby[]> {
     if (name !== null) {
       return await this.hobbyRepo
-        .createQueryBuilder("hobby")
-        .where("hobby.name like :name", { name: `%${name}%` })
+        .createQueryBuilder('hobby')
+        .where('hobby.name like :name', { name: `%${name}%` })
         .getMany();
     } else {
       return await this.hobbyRepo.find();
@@ -35,7 +35,7 @@ export class HobbyService {
   }
 
   async remove(id: number) {
-    let found = await this.hobbyRepo.findOne({
+    const found = await this.hobbyRepo.findOne({
       where: {
         id,
       },

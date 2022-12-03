@@ -40,7 +40,7 @@ export class RestaurantService {
   }
 
   async update(input: UpdateRestaurantInput): Promise<Restaurant> {
-    let found = await this.restaurantRepo.findOne({
+    const found = await this.restaurantRepo.findOne({
       where: {
         id: input.id,
       },
@@ -49,7 +49,7 @@ export class RestaurantService {
   }
 
   async remove(id: number) {
-    let found = await this.restaurantRepo.findOne({
+    const found = await this.restaurantRepo.findOne({
       where: {
         id,
       },

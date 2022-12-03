@@ -15,7 +15,7 @@
     "start:prod": "node dist/main",
     "rover:create-subgraph-schema": "rover subgraph introspect http://localhost:3400/graphql > people.schema.graphql",
     "rover:publish": "yarn rover:create-subgraph-schema && rover subgraph publish My-Graph-V2@current --name people --schema ./people.schema.graphql --routing-url http://localhost:3400/graphql",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

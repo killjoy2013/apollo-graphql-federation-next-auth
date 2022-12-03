@@ -29,7 +29,7 @@ export class TreatyService {
   }
 
   async update(input: UpdateTreatyInput): Promise<Treaty> {
-    let found = await this.treatyRepo.findOne({
+    const found = await this.treatyRepo.findOne({
       where: {
         id: input.id,
       },
@@ -38,7 +38,7 @@ export class TreatyService {
   }
 
   async remove(id: number) {
-    let found = await this.treatyRepo.findOne({
+    const found = await this.treatyRepo.findOne({
       where: {
         id,
       },

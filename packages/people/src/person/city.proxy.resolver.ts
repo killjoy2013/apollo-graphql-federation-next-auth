@@ -1,7 +1,7 @@
-import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
-import { City } from "./entities/city.proxy.entity";
-import { Person } from "./entities/person.entity";
-import { PersonService } from "./person.service";
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { City } from './entities/city.proxy.entity';
+import { Person } from './entities/person.entity';
+import { PersonService } from './person.service';
 
 @Resolver((of) => City)
 export class CityResolver {

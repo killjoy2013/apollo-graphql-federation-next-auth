@@ -1,16 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Like, Repository } from "typeorm";
-import { CreatePersonInput } from "./dto/create-person.input";
-import { Address } from "./entities/address.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Like, Repository } from 'typeorm';
+import { CreatePersonInput } from './dto/create-person.input';
+import { Address } from './entities/address.entity';
 
-import { Person } from "./entities/person.entity";
+import { Person } from './entities/person.entity';
 
 @Injectable()
 export class PersonService {
   constructor(
     @InjectRepository(Person) private personRepo: Repository<Person>,
-    @InjectRepository(Person) private addressRepo: Repository<Address>
+    @InjectRepository(Person) private addressRepo: Repository<Address>,
   ) {}
 
   async create(input: CreatePersonInput): Promise<Person> {
@@ -20,13 +20,13 @@ export class PersonService {
 
     // console.log({ createdPerson });
 
-    let newPerson = await Person.create({
+    const newPerson = await Person.create({
       firstName: input.firstName,
       lastName: input.lastName,
       occupation: input.occupation,
     }).save();
 
-    let newAddress = await Address.create({
+    const newAddress = await Address.create({
       personId: newPerson.id,
       cityId: input.address.cityId,
       detail: input.address.detail,
@@ -38,7 +38,7 @@ export class PersonService {
     //   detail: input.address.detail,
     // });
 
-    let result = await this.personRepo.findOne({
+    const result = await this.personRepo.findOne({
       where: {
         id: newPerson.id,
       },
@@ -52,11 +52,11 @@ export class PersonService {
         where: {
           firstName: Like(`%${name}%`),
         },
-        relations: ["addresses", "hobbies"],
+        relations: ['addresses', 'hobbies'],
       });
     } else {
       return await this.personRepo.find({
-        relations: ["addresses", "hobbies"],
+        relations: ['addresses', 'hobbies'],
       });
     }
   }
@@ -78,25 +78,25 @@ export class PersonService {
   }
 
   async findByCityId(cityId: number): Promise<Person[]> {
-    let baseQueryBuilder = await this.personRepo.createQueryBuilder("person");
+    const baseQueryBuilder = await this.personRepo.createQueryBuilder('person');
 
     baseQueryBuilder.innerJoin(
-      "address",
-      "address",
-      "address.personId = person.id"
+      'address',
+      'address',
+      'address.personId = person.id',
     );
 
-    baseQueryBuilder.where("address.cityId = :cityId", {
+    baseQueryBuilder.where('address.cityId = :cityId', {
       cityId,
     });
 
-    let dell = await baseQueryBuilder.getMany();
+    const dell = await baseQueryBuilder.getMany();
 
     return dell;
   }
 
   async remove(id: number) {
-    let found = await this.personRepo.findOne({
+    const found = await this.personRepo.findOne({
       where: {
         id,
       },

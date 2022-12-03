@@ -33,7 +33,7 @@ export class CityService {
   }
 
   async update(input: UpdateCityInput): Promise<City> {
-    let found = await this.cityRepo.findOne({
+    const found = await this.cityRepo.findOne({
       where: {
         id: input.id,
       },
@@ -42,7 +42,7 @@ export class CityService {
   }
 
   async remove(id: number) {
-    let found = await this.cityRepo.findOne({
+    const found = await this.cityRepo.findOne({
       where: {
         id,
       },

@@ -1,9 +1,9 @@
-import { registerEnumType } from "@nestjs/graphql";
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum Difficulty {
-  Easy = "Easy",
-  Moderate = "Moderate",
-  Difficult = "Difficult",
+  Easy = 'Easy',
+  Moderate = 'Moderate',
+  Difficult = 'Difficult',
 }
 
-registerEnumType(Difficulty, { name: "Difficulty" });
+registerEnumType(Difficulty, { name: 'Difficulty' });

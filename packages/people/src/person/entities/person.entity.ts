@@ -1,5 +1,5 @@
-import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
-import { Hobby } from "src/hobby/entities/hobby.entity";
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
+import { Hobby } from 'src/hobby/entities/hobby.entity';
 import {
   BaseEntity,
   Column,
@@ -8,22 +8,22 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Address } from "./address.entity";
+} from 'typeorm';
+import { Address } from './address.entity';
 
-@Entity({ schema: "people" })
+@Entity({ schema: 'people' })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Person extends BaseEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 
-  @Column({ name: "first_name" })
+  @Column({ name: 'first_name' })
   @Field()
   firstName: string;
 
-  @Column({ name: "last_name" })
+  @Column({ name: 'last_name' })
   @Field()
   lastName: string;
 
@@ -38,14 +38,14 @@ export class Person extends BaseEntity {
   @ManyToMany(() => Hobby, (hobby) => hobby.persons)
   @Field(() => [Hobby], { nullable: true })
   @JoinTable({
-    name: "person_hobby",
+    name: 'person_hobby',
     joinColumn: {
-      name: "person_id",
-      referencedColumnName: "id",
+      name: 'person_id',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "hobby_id",
-      referencedColumnName: "id",
+      name: 'hobby_id',
+      referencedColumnName: 'id',
     },
   })
   hobbies: Hobby[];

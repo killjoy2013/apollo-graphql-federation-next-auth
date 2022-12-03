@@ -34,7 +34,7 @@ export class UserService {
   }
 
   async update(updateUserInput: UpdateUserInput) {
-    let found = await this.userRepo.findOne({
+    const found = await this.userRepo.findOne({
       where: {
         id: updateUserInput.id,
       },
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   async remove(id: number) {
-    let found = await this.userRepo.findOne({
+    const found = await this.userRepo.findOne({
       where: {
         id,
       },

@@ -2,21 +2,21 @@
 import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
-} from "@nestjs/apollo";
-import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { GraphQLModule } from "@nestjs/graphql";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { dataSourceOptions } from "db/data-source";
-import { join } from "path";
-import { AuthModule } from "./auth/auth.module";
-import { Hobby } from "./hobby/entities/hobby.entity";
-import { HobbyModule } from "./hobby/hobby.module";
-import { Address } from "./person/entities/address.entity";
-import { City } from "./person/entities/city.proxy.entity";
-import { Person } from "./person/entities/person.entity";
+} from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from 'db/data-source';
+import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+import { Hobby } from './hobby/entities/hobby.entity';
+import { HobbyModule } from './hobby/hobby.module';
+import { Address } from './person/entities/address.entity';
+import { City } from './person/entities/city.proxy.entity';
+import { Person } from './person/entities/person.entity';
 
-import { PersonModule } from "./person/person.module";
+import { PersonModule } from './person/person.module';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { PersonModule } from "./person/person.module";
 
       autoSchemaFile: {
         federation: 2,
-        path: join(process.cwd(), "people.schema.graphql"),
+        path: join(process.cwd(), 'people.schema.graphql'),
       },
 
       buildSchemaOptions: {

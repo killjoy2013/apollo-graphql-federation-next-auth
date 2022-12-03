@@ -1,7 +1,6 @@
-import { UpdateCityInput } from '../city/dto/update-city.input';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCountryInput } from './dto/create-country.input';
 import { UpdateCountryInput } from './dto/update-country.input';
 import { Country } from './entities/country.entity';
@@ -29,12 +28,12 @@ export class CountryService {
   }
 
   async update(input: UpdateCountryInput): Promise<Country> {
-    let found = await this.countryRepo.findOne({ where: { id: input.id } });
+    const found = await this.countryRepo.findOne({ where: { id: input.id } });
     return await this.countryRepo.save({ ...found, ...input });
   }
 
   async remove(id: number) {
-    let found = await this.countryRepo.findOne({ where: { id } });
+    const found = await this.countryRepo.findOne({ where: { id } });
     if (found) {
       await this.countryRepo.remove(found);
       return id;
@@ -44,13 +43,13 @@ export class CountryService {
   }
 
   async addToTreaty(countryId: number, treatyId: number): Promise<Country> {
-    let foundCountry = await this.countryRepo.findOne({
+    const foundCountry = await this.countryRepo.findOne({
       where: { id: countryId },
       relations: {
         treaties: true,
       },
     });
-    let foundTreaty = await this.treatyRepo.findOne({
+    const foundTreaty = await this.treatyRepo.findOne({
       where: { id: treatyId },
     });
 
@@ -69,7 +68,7 @@ export class CountryService {
     countryId: number,
     treatyId: number,
   ): Promise<Country> {
-    let foundCountry = await this.countryRepo.findOne({
+    const foundCountry = await this.countryRepo.findOne({
       where: {
         id: countryId,
       },
@@ -78,7 +77,7 @@ export class CountryService {
       },
     });
 
-    let foundTreaty = await this.treatyRepo.findOne({
+    const foundTreaty = await this.treatyRepo.findOne({
       where: { id: treatyId },
     });
 

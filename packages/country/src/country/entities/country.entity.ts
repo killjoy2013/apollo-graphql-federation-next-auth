@@ -4,7 +4,6 @@ import { ObjectType, Field, Int, Directive } from '@nestjs/graphql';
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,

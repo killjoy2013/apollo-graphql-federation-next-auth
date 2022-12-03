@@ -3,10 +3,10 @@ import {
   ResolveField,
   Resolver,
   ResolveReference,
-} from "@nestjs/graphql";
-import { Address } from "./entities/address.entity";
-import { City } from "./entities/city.proxy.entity";
-import { PersonService } from "./person.service";
+} from '@nestjs/graphql';
+import { Address } from './entities/address.entity';
+import { City } from './entities/city.proxy.entity';
+import { PersonService } from './person.service';
 
 @Resolver(() => Address)
 export class AddressResolver {
@@ -19,6 +19,6 @@ export class AddressResolver {
 
   @ResolveField((of) => City)
   city(@Parent() address: Address) {
-    return { __typename: "City", id: address.cityId };
+    return { __typename: 'City', id: address.cityId };
   }
 }

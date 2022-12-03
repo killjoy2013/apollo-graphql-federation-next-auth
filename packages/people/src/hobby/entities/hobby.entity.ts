@@ -1,5 +1,5 @@
-import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
-import { Person } from "src/person/entities/person.entity";
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
+import { Person } from 'src/person/entities/person.entity';
 
 import {
   Column,
@@ -7,14 +7,14 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Difficulty } from "../enums";
+} from 'typeorm';
+import { Difficulty } from '../enums';
 
-@Entity({ schema: "people" })
+@Entity({ schema: 'people' })
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Hobby {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   id: number;
 
@@ -23,7 +23,7 @@ export class Hobby {
   name: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Difficulty,
     nullable: true,
   })

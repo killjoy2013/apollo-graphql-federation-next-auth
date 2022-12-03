@@ -38,7 +38,7 @@ export class RoleService {
   }
 
   async findRolesByRight(rightId: number) {
-    let baseQueryBuilder = this.roleRepo.createQueryBuilder('role');
+    const baseQueryBuilder = this.roleRepo.createQueryBuilder('role');
 
     baseQueryBuilder.innerJoin(
       'role_right',
@@ -54,7 +54,7 @@ export class RoleService {
   }
 
   async update(updateRoleInput: UpdateRoleInput) {
-    let found = await this.roleRepo.findOne({
+    const found = await this.roleRepo.findOne({
       where: {
         id: updateRoleInput.id,
       },
@@ -63,7 +63,7 @@ export class RoleService {
   }
 
   async remove(id: number) {
-    let found = await this.roleRepo.findOne({
+    const found = await this.roleRepo.findOne({
       where: {
         id,
       },

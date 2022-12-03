@@ -33,7 +33,7 @@ export class MealService {
   }
 
   async update(input: UpdateMealInput): Promise<Meal> {
-    let found = await this.mealRepo.findOne({
+    const found = await this.mealRepo.findOne({
       where: {
         id: input.id,
       },
@@ -42,7 +42,7 @@ export class MealService {
   }
 
   async remove(id: number) {
-    let found = await this.mealRepo.findOne({
+    const found = await this.mealRepo.findOne({
       where: {
         id,
       },
